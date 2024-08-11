@@ -90,8 +90,7 @@ export const EventsPage: React.FC = () => {
 
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
-      <Title order={1}>Add Event</Title>
-      <Title order={2}>{friendlyName}</Title>
+      <Title order={2}>Add Event</Title>
       <Box maw={400} mx="auto" mt="xl">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput

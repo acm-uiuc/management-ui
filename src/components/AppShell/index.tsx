@@ -8,7 +8,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCalendar, IconEye, IconPlus } from '@tabler/icons-react';
+import { IconCalendar, IconCoin, IconEye, IconLink, IconPlus } from '@tabler/icons-react';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
@@ -43,6 +43,21 @@ const navItems = [
     ],
   },
 ];
+
+const extLinks = [
+  {
+    link: 'https://go.acm.illinois.edu/create',
+    name: 'Link Shortener',
+    icon: IconLink,
+    description: null,
+  },
+  {
+    link: 'https://resumes.acm.illinois.edu',
+    name: 'Stripe Link Creator',
+    icon: IconCoin,
+    description: null,
+  },
+]
 
 function isSameParentPath(path1: string | undefined, path2: string | undefined) {
   if (!path1 || !path2) {
@@ -137,6 +152,9 @@ const AcmAppShell: React.FC<AcmAppShellProps> = ({
       </AppShell.Header>
       <AppShell.Navbar p="sm">
         <SidebarNavItems items={navItems} visible={showSidebar} active={active} />
+        <br />
+        <Divider label="Other Services"/>
+        <SidebarNavItems items={extLinks} visible={showSidebar} active={active} />
         <Group hiddenFrom="sm">
           <Divider />
           <AuthenticatedProfileDropdown userData={userData || {}} />
