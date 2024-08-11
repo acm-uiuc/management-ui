@@ -57,7 +57,7 @@ const extLinks = [
     icon: IconCoin,
     description: null,
   },
-]
+];
 
 function isSameParentPath(path1: string | undefined, path2: string | undefined) {
   if (!path1 || !path2) {
@@ -153,7 +153,7 @@ const AcmAppShell: React.FC<AcmAppShellProps> = ({
       <AppShell.Navbar p="sm">
         <SidebarNavItems items={navItems} visible={showSidebar} active={active} />
         <br />
-        <Divider label="Other Services"/>
+        <Divider label="Other Services" />
         <SidebarNavItems items={extLinks} visible={showSidebar} active={active} />
         <Group hiddenFrom="sm">
           <Divider />

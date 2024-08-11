@@ -53,5 +53,10 @@ export const AuthGuard: React.FC<{ resourceDef: ResourceDefinition; children: Re
       </AcmAppShell>
     );
   }
-  return <AcmAppShell><Title order={1}>{friendlyName}</Title>{children}</AcmAppShell>;
+  return (
+    <AcmAppShell>
+      <Title order={1}>{friendlyName}</Title>
+      {children}
+    </AcmAppShell>
+  );
 };

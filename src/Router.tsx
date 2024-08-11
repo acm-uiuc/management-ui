@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react';
-import { createBrowserRouter, Navigate, RouteObject, RouterProvider } from 'react-router-dom';
-import { Anchor, Text } from '@mantine/core';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { Anchor } from '@mantine/core';
 import { LoginPage } from './pages/Login.page';
 import { LogoutPage } from './pages/Logout.page';
 import { Error404Page } from './pages/Error404.page';
@@ -8,8 +8,7 @@ import { Error500Page } from './pages/Error500.page';
 import { AcmAppShell } from './components/AppShell';
 import { useAuth } from './components/AuthContext';
 import { HomePage } from './pages/Home.page';
-import { EventsPage } from './pages/AddEvents.page';
-import { getRunEnvironmentConfig } from './config';
+import { EventsPage } from './pages/events/AddEvents.page';
 
 const commonRoutes = [
   {
@@ -65,9 +64,7 @@ const authenticatedRouter = createBrowserRouter([
     element: (
       <AcmAppShell>
         Go to{' '}
-        <Anchor href="https://acm.illinois.edu/calendar">
-          https://acm.illinois.edu/calendar
-        </Anchor>{' '}
+        <Anchor href="https://acm.illinois.edu/calendar">https://acm.illinois.edu/calendar</Anchor>{' '}
         to view events on the ACM website.
       </AcmAppShell>
     ),

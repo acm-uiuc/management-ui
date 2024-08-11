@@ -1,5 +1,5 @@
 export const runEnvironments = ['dev', 'prod'] as const;
-export const services = ['events'] as const;
+export const services = ['events', 'tickets', 'merch'] as const;
 export type RunEnvironment = (typeof runEnvironments)[number];
 export type ValidServices = (typeof services)[number];
 export type ValidService = ValidServices;
@@ -34,6 +34,14 @@ const environmentConfig: EnvironmentConfigType = {
         loginScope: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f/ACM.Events.Login',
         apiId: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f',
       },
+      tickets: {
+        friendlyName: 'Ticketing Service (NonProd)',
+        baseEndpoint: 'https://ticketing.aws.qa.acmuiuc.org',
+      },
+      merch: {
+        friendlyName: 'Merch Sales Service (Prod)',
+        baseEndpoint: 'https://merchapi.acm.illinois.edu',
+      },
     },
   },
   prod: {
@@ -46,10 +54,19 @@ const environmentConfig: EnvironmentConfigType = {
         loginScope: 'api://5e08cf0f-53bb-4e09-9df2-e9bdc3467296/ACM.Events.Login',
         apiId: 'api://5e08cf0f-53bb-4e09-9df2-e9bdc3467296',
       },
+      tickets: {
+        friendlyName: 'Ticketing Service',
+        baseEndpoint: 'https://ticketing.aws.acmuiuc.org',
+      },
+      merch: {
+        friendlyName: 'Merch Sales Service',
+        baseEndpoint: 'https://merchapi.acm.illinois.edu',
+      },
     },
   },
 } as const;
 
-const getRunEnvironmentConfig = () => environmentConfig[(import.meta.env.VITE_RUN_ENVIRONMENT || 'dev') as RunEnvironment];
+const getRunEnvironmentConfig = () =>
+  environmentConfig[(import.meta.env.VITE_RUN_ENVIRONMENT || 'dev') as RunEnvironment];
 
 export { getRunEnvironmentConfig };
