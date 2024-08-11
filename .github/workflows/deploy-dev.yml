@@ -9,8 +9,6 @@ on:
 jobs:
   deploy-cf-pages-dev:
     runs-on: ubuntu-latest
-    needs:
-      - test-unit
     concurrency:
       group: ${{ github.event.repository.name }}-dev
       cancel-in-progress: false
