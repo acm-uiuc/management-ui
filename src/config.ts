@@ -28,7 +28,7 @@ const environmentConfig: EnvironmentConfigType = {
     AadValidClientId: 'd1978c23-6455-426a-be4d-528b2d2e4026',
     ServiceConfiguration: {
       events: {
-        friendlyName: 'Events Management API (NonProd)',
+        friendlyName: 'Events Management Service (NonProd)',
         baseEndpoint: 'https://infra-events-api.aws.qa.acmuiuc.org',
         authCheckRoute: '/api/v1/protected',
         loginScope: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f/ACM.Events.Login',
@@ -40,7 +40,7 @@ const environmentConfig: EnvironmentConfigType = {
     AadValidClientId: '43fee67e-e383-4071-9233-ef33110e9386',
     ServiceConfiguration: {
       events: {
-        friendlyName: 'Events Management API',
+        friendlyName: 'Events Management Service',
         baseEndpoint: 'https://infra-events-api.aws.acmuiuc.org',
         authCheckRoute: '/api/v1/protected',
         loginScope: 'api://5e08cf0f-53bb-4e09-9df2-e9bdc3467296/ACM.Events.Login',
