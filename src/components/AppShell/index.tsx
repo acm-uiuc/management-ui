@@ -52,7 +52,7 @@ const extLinks = [
     description: null,
   },
   {
-    link: 'https://resumes.acm.illinois.edu',
+    link: 'https://stripelinks.acm.illinois.edu/create',
     name: 'Stripe Link Creator',
     icon: IconCoin,
     description: null,
