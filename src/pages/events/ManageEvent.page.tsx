@@ -59,6 +59,8 @@ export const ManageEventPage: React.FC = () => {
 
   const { eventId } = useParams();
 
+  const isEditing = eventId !== undefined;
+
   useEffect(() => {
     const getOrgs = async () => {
       const response = await api.get('/api/v1/organizations');
@@ -66,6 +68,39 @@ export const ManageEventPage: React.FC = () => {
     };
     getOrgs();
   }, []);
+
+  useEffect(() => {
+    if (!isEditing) {
+      return;
+    }
+    // Fetch event data and populate form
+    const getEvent = async () => {
+      try {
+        const response = await api.get(`/api/v1/events/${eventId}`);
+        const eventData = response.data;
+        const formValues = {
+          title: eventData.title,
+          description: eventData.description,
+          start: new Date(eventData.start),
+          end: eventData.end ? new Date(eventData.end) : undefined,
+          location: eventData.location,
+          locationLink: eventData.locationLink,
+          host: eventData.host,
+          featured: eventData.featured,
+          repeats: eventData.repeats,
+          repeatEnds: eventData.repeatEnds ? new Date(eventData.repeatEnds) : undefined,
+          paidEventId: eventData.paidEventId,
+        };
+        form.setValues(formValues);
+      } catch (error) {
+        console.error('Error fetching event data:', error);
+        notifications.show({
+          message: 'Failed to fetch event data, please try again.',
+        });
+      }
+    };
+    getEvent();
+  }, [eventId, isEditing]);
 
   const form = useForm<EventPostRequest>({
     validate: zodResolver(requestBodySchema),

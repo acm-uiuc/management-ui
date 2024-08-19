@@ -51,8 +51,6 @@ export const ViewEventsPage: React.FC = () => {
     return <FullScreenLoader />;
   }
 
-  console.log({ eventList })
-
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
       <Title order={2}>All Events</Title>
@@ -64,7 +62,6 @@ export const ViewEventsPage: React.FC = () => {
                 <Button
                   component="a"
                   href={`/events/edit/${event.id}`}
-                  onClick={(event) => event.preventDefault()}
                 >
                   Edit
                 </Button>
