@@ -50,11 +50,13 @@ const requestBodySchema = baseBodySchema
 
 type EventPostRequest = z.infer<typeof requestBodySchema>;
 
-export const EventsPage: React.FC = () => {
+export const ManageEventPage: React.FC = () => {
   const [orgList, setOrgList] = useState<null | string[]>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const api = useApi('events');
+
+  const { eventId } = useParams();
 
   useEffect(() => {
     const getOrgs = async () => {

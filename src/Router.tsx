@@ -8,7 +8,8 @@ import { Error500Page } from './pages/Error500.page';
 import { AcmAppShell } from './components/AppShell';
 import { useAuth } from './components/AuthContext';
 import { HomePage } from './pages/Home.page';
-import { EventsPage } from './pages/events/AddEvents.page';
+import { ManageEventPage } from './pages/events/ManageEvent.page';
+import { ViewEventsPage } from './pages/events/ViewEvents.page';
 
 const commonRoutes = [
   {
@@ -57,17 +58,15 @@ const authenticatedRouter = createBrowserRouter([
   },
   {
     path: '/events/add',
-    element: <EventsPage />,
+    element: <ManageEventPage />,
+  },
+  {
+    path: '/events/edit/:eventId',
+    element: <ManageEventPage />,
   },
   {
     path: '/events/view',
-    element: (
-      <AcmAppShell>
-        Go to{' '}
-        <Anchor href="https://acm.illinois.edu/calendar">https://acm.illinois.edu/calendar</Anchor>{' '}
-        to view events on the ACM website.
-      </AcmAppShell>
-    ),
+    element: <ViewEventsPage />,
   },
 ]);
 
