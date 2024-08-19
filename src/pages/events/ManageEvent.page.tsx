@@ -142,15 +142,17 @@ export const ManageEventPage: React.FC = () => {
         end: values.end ? dayjs(values.end).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
         repeatEnds: values.repeatEnds ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
       };
-      const response = await api.post('/api/v1/events', realValues);
+
+      const eventURL = isEditing ? `/api/v1/events/${eventId}` : '/api/v1/events';
+      const response = await api.post(eventURL, realValues);
       notifications.show({
-        title: 'Event created!',
+        title: isEditing ? 'Event updated' : 'Event created',
         message: `The event ID is "${response.data.id}".`,
       });
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error('Error creating/editing event:', error);
       notifications.show({
-        message: 'Failed to create event, please try again.',
+        message: 'Failed to create/edit event, please try again.',
       });
     }
   };
@@ -161,7 +163,7 @@ export const ManageEventPage: React.FC = () => {
 
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
-      <Title order={2}>Add Event</Title>
+      <Title order={2}>{isEditing ? `Edit` : `Add`} Event</Title>
       <Box maw={400} mx="auto" mt="xl">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
@@ -234,7 +236,7 @@ export const ManageEventPage: React.FC = () => {
             {...form.getInputProps('paidEventId')}
           />
           <Button type="submit" mt="md">
-            {isSubmitting ? <><Loader color='white'/>Submitting...</> : 'Create Event' }
+            {isSubmitting ? <><Loader color='white'/>Submitting...</> : `${isEditing ? 'Save' : 'Create'} Event` }
           </Button>
         </form>
       </Box>
