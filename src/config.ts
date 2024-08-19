@@ -1,4 +1,6 @@
-export const runEnvironments = ['dev', 'prod'] as const;
+export const runEnvironments = ['dev', 'prod', 'local-dev'] as const;
+// local dev should be used when you want to test against a local instance of the API
+
 export const services = ['events', 'tickets', 'merch'] as const;
 export type RunEnvironment = (typeof runEnvironments)[number];
 export type ValidServices = (typeof services)[number];
@@ -24,6 +26,26 @@ type EnvironmentConfigType = {
 };
 
 const environmentConfig: EnvironmentConfigType = {
+  'local-dev': {
+    AadValidClientId: 'd1978c23-6455-426a-be4d-528b2d2e4026',
+    ServiceConfiguration: {
+      events: {
+        friendlyName: 'Events Management Service (NonProd)',
+        baseEndpoint: 'http://localhost:8080',
+        authCheckRoute: '/api/v1/protected',
+        loginScope: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f/ACM.Events.Login',
+        apiId: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f',
+      },
+      tickets: {
+        friendlyName: 'Ticketing Service (NonProd)',
+        baseEndpoint: 'https://ticketing.aws.qa.acmuiuc.org',
+      },
+      merch: {
+        friendlyName: 'Merch Sales Service (Prod)',
+        baseEndpoint: 'https://merchapi.acm.illinois.edu',
+      },
+    },
+  },
   dev: {
     AadValidClientId: 'd1978c23-6455-426a-be4d-528b2d2e4026',
     ServiceConfiguration: {

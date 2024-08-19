@@ -9,6 +9,7 @@ import { useApi } from '@/util/api';
 import { getRunEnvironmentConfig } from '@/config';
 import { AuthGuard } from '@/components/AuthGuard';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { useParams } from 'react-router-dom';
 
 
 function capitalizeFirstLetter(string: string) {
