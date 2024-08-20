@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node LTS
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Build
         run: corepack enable && yarn && yarn run build
         env:
@@ -54,7 +54,7 @@ jobs:
       - name: Setup Node LTS
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Build
         run: corepack enable && yarn && yarn run build
         env:
