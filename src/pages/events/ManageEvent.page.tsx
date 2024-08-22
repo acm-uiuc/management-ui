@@ -109,7 +109,7 @@ export const ManageEventPage: React.FC = () => {
       description: '',
       start: new Date(),
       end: new Date((new Date()).valueOf() + (3.6e+6)), // 1 hr later
-      location: 'ACM Room',
+      location: 'ACM Room (Siebel CS 1104)',
       locationLink: 'https://maps.app.goo.gl/dwbBBBkfjkgj8gvA8',
       host: 'ACM',
       featured: false,
