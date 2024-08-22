@@ -147,8 +147,8 @@ export const ManageEventPage: React.FC = () => {
       const eventURL = isEditing ? `/api/v1/events/${eventId}` : '/api/v1/events';
       const response = await api.post(eventURL, realValues);
       notifications.show({
-        title: isEditing ? 'Event updated' : 'Event created',
-        message: `The event ID is "${response.data.id}".`,
+        title: isEditing ? 'Event updated!' : 'Event created!',
+        message: isEditing ? undefined : `The event ID is "${response.data.id}".`,
       });
     } catch (error) {
       console.error('Error creating/editing event:', error);
