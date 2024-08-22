@@ -33,7 +33,7 @@ const baseBodySchema = z.object({
 
 const requestBodySchema = baseBodySchema
   .extend({
-    repeats: z.optional(z.enum(repeatOptions)),
+    repeats: z.optional(z.enum(repeatOptions)).nullable(),
     repeatEnds: z.date().optional(),
   })
   .refine((data) => (data.repeatEnds ? data.repeats !== undefined : true), {
@@ -141,6 +141,7 @@ export const ManageEventPage: React.FC = () => {
         start: dayjs(values.start).format('YYYY-MM-DD[T]HH:mm:00'),
         end: values.end ? dayjs(values.end).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
         repeatEnds: values.repeatEnds ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
+        repeats: values.repeats ? values.repeats : undefined
       };
 
       const eventURL = isEditing ? `/api/v1/events/${eventId}` : '/api/v1/events';
