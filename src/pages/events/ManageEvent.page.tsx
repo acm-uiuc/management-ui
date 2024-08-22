@@ -9,6 +9,7 @@ import { useApi } from '@/util/api';
 import { getRunEnvironmentConfig } from '@/config';
 import { AuthGuard } from '@/components/AuthGuard';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { useParams } from 'react-router-dom';
 
 
 function capitalizeFirstLetter(string: string) {
@@ -50,11 +51,15 @@ const requestBodySchema = baseBodySchema
 
 type EventPostRequest = z.infer<typeof requestBodySchema>;
 
-export const EventsPage: React.FC = () => {
+export const ManageEventPage: React.FC = () => {
   const [orgList, setOrgList] = useState<null | string[]>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const api = useApi('events');
+
+  const { eventId } = useParams();
+
+  const isEditing = eventId !== undefined;
 
   useEffect(() => {
     const getOrgs = async () => {
@@ -63,6 +68,39 @@ export const EventsPage: React.FC = () => {
     };
     getOrgs();
   }, []);
+
+  useEffect(() => {
+    if (!isEditing) {
+      return;
+    }
+    // Fetch event data and populate form
+    const getEvent = async () => {
+      try {
+        const response = await api.get(`/api/v1/events/${eventId}`);
+        const eventData = response.data;
+        const formValues = {
+          title: eventData.title,
+          description: eventData.description,
+          start: new Date(eventData.start),
+          end: eventData.end ? new Date(eventData.end) : undefined,
+          location: eventData.location,
+          locationLink: eventData.locationLink,
+          host: eventData.host,
+          featured: eventData.featured,
+          repeats: eventData.repeats,
+          repeatEnds: eventData.repeatEnds ? new Date(eventData.repeatEnds) : undefined,
+          paidEventId: eventData.paidEventId,
+        };
+        form.setValues(formValues);
+      } catch (error) {
+        console.error('Error fetching event data:', error);
+        notifications.show({
+          message: 'Failed to fetch event data, please try again.',
+        });
+      }
+    };
+    getEvent();
+  }, [eventId, isEditing]);
 
   const form = useForm<EventPostRequest>({
     validate: zodResolver(requestBodySchema),
@@ -104,15 +142,17 @@ export const EventsPage: React.FC = () => {
         end: values.end ? dayjs(values.end).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
         repeatEnds: values.repeatEnds ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
       };
-      const response = await api.post('/api/v1/events', realValues);
+
+      const eventURL = isEditing ? `/api/v1/events/${eventId}` : '/api/v1/events';
+      const response = await api.post(eventURL, realValues);
       notifications.show({
-        title: 'Event created!',
+        title: isEditing ? 'Event updated' : 'Event created',
         message: `The event ID is "${response.data.id}".`,
       });
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error('Error creating/editing event:', error);
       notifications.show({
-        message: 'Failed to create event, please try again.',
+        message: 'Failed to create/edit event, please try again.',
       });
     }
   };
@@ -123,7 +163,7 @@ export const EventsPage: React.FC = () => {
 
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
-      <Title order={2}>Add Event</Title>
+      <Title order={2}>{isEditing ? `Edit` : `Add`} Event</Title>
       <Box maw={400} mx="auto" mt="xl">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
@@ -196,7 +236,7 @@ export const EventsPage: React.FC = () => {
             {...form.getInputProps('paidEventId')}
           />
           <Button type="submit" mt="md">
-            {isSubmitting ? <><Loader color='white'/>Submitting...</> : 'Create Event' }
+            {isSubmitting ? <><Loader color='white'/>Submitting...</> : `${isEditing ? 'Save' : 'Create'} Event` }
           </Button>
         </form>
       </Box>

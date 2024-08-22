@@ -1,160 +1,129 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Box, TextInput, Textarea, Switch, Select, Button } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
-import { DateTimePicker } from '@mantine/dates';
+import { Title, Box, Card, Text, Grid, SimpleGrid, Button, Flex, Table } from '@mantine/core';
 import { z } from 'zod';
 import dayjs from 'dayjs';
-import { notifications } from '@mantine/notifications';
 import { useApi } from '@/util/api';
 import { getRunEnvironmentConfig } from '@/config';
 import { AuthGuard } from '@/components/AuthGuard';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { notifications } from '@mantine/notifications';
 
 const repeatOptions = ['weekly', 'biweekly'] as const;
 
-const baseBodySchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  start: z.date(),
-  end: z.optional(z.date()),
-  location: z.string().min(1, 'Location is required'),
-  locationLink: z.optional(z.string().url('Invalid URL')),
-  host: z.string().min(1, 'Host is required'),
+const baseSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  start: z.string(),
+  end: z.optional(z.string()),
+  location: z.string(),
+  locationLink: z.optional(z.string().url()),
+  host: z.string(),
   featured: z.boolean().default(false),
+  paidEventId: z.optional(z.string().min(1)),
 });
 
-const requestBodySchema = baseBodySchema
-  .extend({
-    repeats: z.optional(z.enum(repeatOptions)),
-    repeatEnds: z.date().optional(),
-  })
-  .refine((data) => (data.repeatEnds ? data.repeats !== undefined : true), {
-    message: 'Repeats is required when Repeat Ends is defined',
-  });
+const requestSchema = baseSchema.extend({
+  repeats: z.optional(z.enum(repeatOptions)),
+  repeatEnds: z.string().optional(),
+});
 
-type EventPostRequest = z.infer<typeof requestBodySchema>;
+const getEventSchema = requestSchema.extend({
+  id: z.string(),
+});
 
-export const EventsPage: React.FC = () => {
-  const { friendlyName } = getRunEnvironmentConfig().ServiceConfiguration.events;
-  const [orgList, setOrgList] = useState<null | string[]>(null);
+export type EventGetResponse = z.infer<typeof getEventSchema>;
+const getEventsSchema = z.array(getEventSchema);
+export type EventsGetResponse = z.infer<typeof getEventsSchema>;
+
+export const ViewEventsPage: React.FC = () => {
+  const [eventList, setEventList] = useState<EventsGetResponse>([]);
   const api = useApi('events');
 
   useEffect(() => {
-    const getOrgs = async () => {
-      const response = await api.get('/api/v1/organizations');
-      setOrgList(response.data);
+    const getEvents = async () => {
+      const response = await api.get('/api/v1/events');
+      const events = response.data;
+      events.sort((a: EventGetResponse, b: EventGetResponse) => {
+        return a.start.localeCompare(b.start);
+      });
+      setEventList(response.data);
     };
-    getOrgs();
+    getEvents();
   }, []);
 
-  const form = useForm<EventPostRequest>({
-    validate: zodResolver(requestBodySchema),
-    initialValues: {
-      title: '',
-      description: '',
-      start: new Date(),
-      end: new Date(),
-      location: '',
-      locationLink: undefined,
-      host: orgList ? orgList[0] : 'ACM',
-      featured: false,
-      repeats: undefined,
-      repeatEnds: undefined,
-    },
-  });
-
-  const handleSubmit = async (values: EventPostRequest) => {
+  const deleteEvent = async (eventId: string) => {
     try {
-      // const response = await api.post('/api/v1/events', values);
-      const realValues = {
-        ...values,
-        start: dayjs(values.start).format('YYYY-MM-DD[T]HH:mm:00'),
-        end: dayjs(values.end).format('YYYY-MM-DD[T]HH:mm:00'),
-      };
-      const response = await api.post('/api/v1/events', realValues);
+      const response = await api.delete(`/api/v1/events/${eventId}`);
+      setEventList((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
       notifications.show({
-        title: 'Event created!',
-        message: `The event ID is "${response.data.id}".`,
+        title: 'Event deleted',
+        message: `The event was successfully deleted.`,
       });
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error(error);
       notifications.show({
-        message: 'Failed to create event, please try again.',
+        title: 'Error deleting event',
+        message: `${error}`,
+        color: 'red',
       });
     }
   };
 
-  if (orgList === null) {
+  if (eventList.length === 0) {
     return <FullScreenLoader />;
   }
 
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
-      <Title order={2}>Add Event</Title>
-      <Box maw={400} mx="auto" mt="xl">
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <TextInput
-            label="Event Title"
-            placeholder="Event title"
-            {...form.getInputProps('title')}
-          />
-          <Textarea
-            label="Event Description"
-            placeholder="Event description"
-            {...form.getInputProps('description')}
-          />
-          <DateTimePicker
-            label="Start Date"
-            valueFormat="MM-DD-YYYY h:mm A [Urbana Time]"
-            placeholder="Pick start date"
-            {...form.getInputProps('start')}
-          />
-          <DateTimePicker
-            label="End Date"
-            valueFormat="MM-DD-YYYY h:mm A [Urbana Time]"
-            placeholder="Pick end date (optional)"
-            {...form.getInputProps('end')}
-          />
-          <TextInput
-            label="Event Location"
-            placeholder="ACM Room"
-            {...form.getInputProps('location')}
-          />
-          <TextInput
-            label="Location Link"
-            placeholder="https://maps.app.goo.gl/dwbBBBkfjkgj8gvA8"
-            {...form.getInputProps('locationLink')}
-          />
-          <Select
-            label="Host"
-            placeholder="Select host organization"
-            data={orgList.map((org) => ({ value: org, label: org }))}
-            {...form.getInputProps('host')}
-          />
-          <Switch
-            label="Featured Event?"
-            {...form.getInputProps('featured', { type: 'checkbox' })}
-          />
-          <Select
-            label="Repeats"
-            placeholder="Select repeat option"
-            data={repeatOptions.map((option) => ({ value: option, label: option }))}
-            clearable
-            {...form.getInputProps('repeats')}
-          />
-          {form.values.repeats && (
-            <DateTimePicker
-              valueFormat="MM-DD-YYYY h:mm A [Urbana Time]"
-              label="Repeat Ends"
-              placeholder="Pick repeat end date"
-              {...form.getInputProps('repeatEnds')}
-            />
-          )}
-          <Button type="submit" mt="md">
-            Create Event
-          </Button>
-        </form>
-      </Box>
+      <Title order={2}>All Events</Title>
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>Title</Table.Th>
+            <Table.Th>Start</Table.Th>
+            <Table.Th>End</Table.Th>
+            <Table.Th>Location</Table.Th>
+            <Table.Th>Description</Table.Th>
+            <Table.Th>Host</Table.Th>
+            <Table.Th>Featured</Table.Th>
+            <Table.Th>Repeats</Table.Th>
+            <Table.Th />
+            <Table.Th />
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          {eventList.map((event) => (
+            <Table.Tr key={event.id}>
+              <Table.Td>{event.title}</Table.Td>
+              <Table.Td>{dayjs(event.start).format('MMM D YYYY hh:mm')}</Table.Td>
+              <Table.Td>{event.end ? dayjs(event.end).format('MMM D YYYY hh:mm') : 'N/A'}</Table.Td>
+              <Table.Td>{event.location}</Table.Td>
+              <Table.Td>{event.description}</Table.Td>
+              <Table.Td>{event.host}</Table.Td>
+              <Table.Td>{event.featured ? 'Yes' : 'No'}</Table.Td>
+              <Table.Td>{event.repeats}</Table.Td>
+              <Table.Td>
+                <Button
+                  component="a"
+                  href={`/events/edit/${event.id}`}
+                >
+                  Edit
+                </Button>
+              </Table.Td>
+              <Table.Td>
+                <Button
+                  color="red"
+                  onClick={() => {
+                    deleteEvent(event.id);
+                  }}
+                >
+                  Delete
+                </Button>
+              </Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
     </AuthGuard>
   );
 };
