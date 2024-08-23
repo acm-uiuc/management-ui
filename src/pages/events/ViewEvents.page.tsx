@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Box, Card, Text, Grid, SimpleGrid, Button, Flex, Table } from '@mantine/core';
+import { Title, Box, Card, Text, Grid, SimpleGrid, Button, Flex, Table, Modal, Group } from '@mantine/core';
 import { z } from 'zod';
 import dayjs from 'dayjs';
 import { useApi } from '@/util/api';
@@ -7,6 +7,10 @@ import { getRunEnvironmentConfig } from '@/config';
 import { AuthGuard } from '@/components/AuthGuard';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
 import { notifications } from '@mantine/notifications';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks';
+import { capitalizeFirstLetter } from './ManageEvent.page';
 
 const repeatOptions = ['weekly', 'biweekly'] as const;
 
@@ -38,6 +42,9 @@ export type EventsGetResponse = z.infer<typeof getEventsSchema>;
 export const ViewEventsPage: React.FC = () => {
   const [eventList, setEventList] = useState<EventsGetResponse>([]);
   const api = useApi('events');
+  const [opened, { open, close }] = useDisclosure(false);
+  const [deleteCandidate, setDeleteCandidate] = useState<EventGetResponse | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getEvents = async () => {
@@ -59,6 +66,7 @@ export const ViewEventsPage: React.FC = () => {
         title: 'Event deleted',
         message: `The event was successfully deleted.`,
       });
+      close();
     } catch (error) {
       console.error(error);
       notifications.show({
@@ -75,7 +83,20 @@ export const ViewEventsPage: React.FC = () => {
 
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
-      <Title order={2}>All Events</Title>
+      {deleteCandidate && 
+      <Modal opened={opened} onClose={() => {setDeleteCandidate(null); close();}} title="Confirm action">
+        <Text>Are you sure you want to delete the event <i>{deleteCandidate?.title}</i>?</Text>
+        <hr/>
+        <Group>
+          <Button leftSection={<IconTrash />} onClick={() => {deleteEvent(deleteCandidate?.id)}}>Delete</Button>
+        </Group>
+      </Modal> }
+      <div>
+      <Button leftSection={<IconPlus size={14} />} onClick={() => {navigate('/events/add')}}>
+        New Calendar Event
+      </Button>
+      </div>
+
       <Table>
         <Table.Thead>
           <Table.Tr>
@@ -101,7 +122,7 @@ export const ViewEventsPage: React.FC = () => {
               <Table.Td>{event.description}</Table.Td>
               <Table.Td>{event.host}</Table.Td>
               <Table.Td>{event.featured ? 'Yes' : 'No'}</Table.Td>
-              <Table.Td>{event.repeats}</Table.Td>
+              <Table.Td>{capitalizeFirstLetter(event.repeats || 'Never') || 'Never'}</Table.Td>
               <Table.Td>
                 <Button
                   component="a"
@@ -114,7 +135,8 @@ export const ViewEventsPage: React.FC = () => {
                 <Button
                   color="red"
                   onClick={() => {
-                    deleteEvent(event.id);
+                    setDeleteCandidate(event);
+                    open();
                   }}
                 >
                   Delete

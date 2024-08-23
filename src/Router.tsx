@@ -65,7 +65,7 @@ const authenticatedRouter = createBrowserRouter([
     element: <ManageEventPage />,
   },
   {
-    path: '/events/view',
+    path: '/events/manage',
     element: <ViewEventsPage />,
   },
 ]);

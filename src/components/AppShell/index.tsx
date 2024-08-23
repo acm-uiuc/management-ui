@@ -25,22 +25,10 @@ interface AcmAppShellProps {
 
 const navItems = [
   {
-    link: '',
+    link: '/events/manage',
     name: 'Event Calendar',
     icon: IconCalendar,
     description: null,
-    children: [
-      {
-        link: '/events/add',
-        name: 'Add Event',
-        icon: IconPlus,
-      },
-      {
-        link: '/events/view',
-        name: 'View Events',
-        icon: IconEye,
-      },
-    ],
   },
 ];
 

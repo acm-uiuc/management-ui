@@ -9,10 +9,10 @@ import { useApi } from '@/util/api';
 import { getRunEnvironmentConfig } from '@/config';
 import { AuthGuard } from '@/components/AuthGuard';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
-function capitalizeFirstLetter(string: string) {
+export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -54,7 +54,7 @@ type EventPostRequest = z.infer<typeof requestBodySchema>;
 export const ManageEventPage: React.FC = () => {
   const [orgList, setOrgList] = useState<null | string[]>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const api = useApi('events');
 
   const { eventId } = useParams();
@@ -150,6 +150,7 @@ export const ManageEventPage: React.FC = () => {
         title: isEditing ? 'Event updated!' : 'Event created!',
         message: isEditing ? undefined : `The event ID is "${response.data.id}".`,
       });
+      navigate('/events/manage')
     } catch (error) {
       console.error('Error creating/editing event:', error);
       notifications.show({
