@@ -51,7 +51,7 @@ const environmentConfig: EnvironmentConfigType = {
     ServiceConfiguration: {
       events: {
         friendlyName: 'Events Management Service (NonProd)',
-        baseEndpoint: 'https://infra-events-api.aws.qa.acmuiuc.org',
+        baseEndpoint: 'https://infra-core-api.aws.qa.acmuiuc.org',
         authCheckRoute: '/api/v1/protected',
         loginScope: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f/ACM.Events.Login',
         apiId: 'api://39c28870-94e4-47ee-b4fb-affe0bf96c9f',
@@ -71,7 +71,7 @@ const environmentConfig: EnvironmentConfigType = {
     ServiceConfiguration: {
       events: {
         friendlyName: 'Events Management Service',
-        baseEndpoint: 'https://infra-events-api.aws.acmuiuc.org',
+        baseEndpoint: 'https://infra-core-api.aws.acmuiuc.org',
         authCheckRoute: '/api/v1/protected',
         loginScope: 'api://5e08cf0f-53bb-4e09-9df2-e9bdc3467296/ACM.Events.Login',
         apiId: 'api://5e08cf0f-53bb-4e09-9df2-e9bdc3467296',
