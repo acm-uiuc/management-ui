@@ -136,11 +136,12 @@ export const ManageEventPage: React.FC = () => {
 
   const handleSubmit = async (values: EventPostRequest) => {
     try {
+      setIsSubmitting(true);
       const realValues = {
         ...values,
         start: dayjs(values.start).format('YYYY-MM-DD[T]HH:mm:00'),
         end: values.end ? dayjs(values.end).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
-        repeatEnds: values.repeatEnds ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
+        repeatEnds: values.repeatEnds && values.repeats ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
         repeats: values.repeats ? values.repeats : undefined
       };
 
@@ -152,6 +153,7 @@ export const ManageEventPage: React.FC = () => {
       });
       navigate('/events/manage')
     } catch (error) {
+      setIsSubmitting(false);
       console.error('Error creating/editing event:', error);
       notifications.show({
         message: 'Failed to create/edit event, please try again.',
@@ -213,7 +215,7 @@ export const ManageEventPage: React.FC = () => {
             {...form.getInputProps('host')}
           />
           <Switch
-            label="Show on home page carousel?"
+            label={`Show on home page carousel${!form.values.repeats ? " and Discord" : ""}?`}
             style={{paddingTop: '0.5em'}}
             {...form.getInputProps('featured', { type: 'checkbox' })}
           />
@@ -238,7 +240,7 @@ export const ManageEventPage: React.FC = () => {
             {...form.getInputProps('paidEventId')}
           />
           <Button type="submit" mt="md">
-            {isSubmitting ? <><Loader color='white'/>Submitting...</> : `${isEditing ? 'Save' : 'Create'} Event` }
+            {isSubmitting ? <><Loader size={16} color='white'/>Submitting...</> : `${isEditing ? 'Save' : 'Create'} Event` }
           </Button>
         </form>
       </Box>
