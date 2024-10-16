@@ -8,7 +8,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCalendar, IconCoin, IconEye, IconLink, IconPlus } from '@tabler/icons-react';
+import { IconCalendar, IconCoin, IconEye, IconLink, IconPlus, IconFileDollar, IconPizza } from '@tabler/icons-react';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
@@ -43,6 +43,18 @@ const extLinks = [
     link: 'https://stripelinks.acm.illinois.edu/create',
     name: 'Stripe Link Creator',
     icon: IconCoin,
+    description: null,
+  },
+  {
+    link: 'https://go.acm.illinois.edu/reimburse',
+    name: 'Funding and Reimbursement Requests',
+    icon: IconFileDollar,
+    description: null,
+  },
+  {
+    link: 'https://go.acm.illinois.edu/sigpizza',
+    name: 'Pizza Request Form',
+    icon: IconPizza,
     description: null,
   },
 ];
