@@ -28,6 +28,8 @@ const ticketEntrySchema = z.object({
   valid: z.boolean(),
   type: z.enum(["merch", "ticket"]),
   ticketId: z.string().min(1),
+  refunded: z.boolean(),
+  fulfilled: z.boolean(),
   purchaserData: purchaseSchema,
 });
 
@@ -36,15 +38,15 @@ const ticketsResponseSchema = z.object({
 });
 
 type TicketEntry = z.infer<typeof ticketEntrySchema>;
-type TicketsResponse = z.infer<typeof ticketsResponseSchema>;
 
 const getTicketStatus = (ticket: TicketEntry): { status: 'fulfilled' | 'unfulfilled' | 'refunded', color: string } => {
-  if (!ticket.valid) {
+  if (ticket.refunded) {
     return { status: 'refunded', color: 'red' };
   }
-  // Add your logic here for determining fulfilled vs unfulfilled
-  // For example, you might check additional fields from the API
-  return { status: 'fulfilled', color: 'green' };
+  if (ticket.fulfilled) {
+    return { status: 'fulfilled', color: 'green' };
+  }
+  return { status: 'unfulfilled', color: 'orange' };
 };
 
 const ViewTicketsPage: React.FC = () => {
