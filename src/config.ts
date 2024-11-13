@@ -1,7 +1,7 @@
 export const runEnvironments = ['dev', 'prod', 'local-dev'] as const;
 // local dev should be used when you want to test against a local instance of the API
 
-export const services = ['events', 'tickets', 'merch'] as const;
+export const services = ['core', 'tickets', 'merch'] as const;
 export type RunEnvironment = (typeof runEnvironments)[number];
 export type ValidServices = (typeof services)[number];
 export type ValidService = ValidServices;
@@ -29,7 +29,7 @@ const environmentConfig: EnvironmentConfigType = {
   'local-dev': {
     AadValidClientId: 'd1978c23-6455-426a-be4d-528b2d2e4026',
     ServiceConfiguration: {
-      events: {
+      core: {
         friendlyName: 'Core Management Service (NonProd)',
         baseEndpoint: 'http://localhost:8080',
         authCheckRoute: '/api/v1/protected',
@@ -49,7 +49,7 @@ const environmentConfig: EnvironmentConfigType = {
   dev: {
     AadValidClientId: 'd1978c23-6455-426a-be4d-528b2d2e4026',
     ServiceConfiguration: {
-      events: {
+      core: {
         friendlyName: 'Core Management Service (NonProd)',
         baseEndpoint: 'https://infra-core-api.aws.qa.acmuiuc.org',
         authCheckRoute: '/api/v1/protected',
@@ -69,7 +69,7 @@ const environmentConfig: EnvironmentConfigType = {
   prod: {
     AadValidClientId: '43fee67e-e383-4071-9233-ef33110e9386',
     ServiceConfiguration: {
-      events: {
+      core: {
         friendlyName: 'Core Management Service',
         baseEndpoint: 'https://infra-core-api.aws.acmuiuc.org',
         authCheckRoute: '/api/v1/protected',

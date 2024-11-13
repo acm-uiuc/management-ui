@@ -52,7 +52,7 @@ export const ManageEventPage: React.FC = () => {
   const [orgList, setOrgList] = useState<null | string[]>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
-  const api = useApi('events');
+  const api = useApi('core');
 
   const { eventId } = useParams();
 
@@ -166,7 +166,7 @@ export const ManageEventPage: React.FC = () => {
   }
 
   return (
-    <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
+    <AuthGuard resourceDef={{ service: 'core', validRoles: ['manage:events'] }}>
       <Title order={2}>{isEditing ? `Edit` : `Add`} Event</Title>
       <Box maw={400} mx="auto" mt="xl">
         <form onSubmit={form.onSubmit(handleSubmit)}>

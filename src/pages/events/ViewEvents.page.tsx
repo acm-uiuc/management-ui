@@ -53,7 +53,7 @@ export type EventsGetResponse = z.infer<typeof getEventsSchema>;
 
 export const ViewEventsPage: React.FC = () => {
   const [eventList, setEventList] = useState<EventsGetResponse>([]);
-  const api = useApi('events');
+  const api = useApi('core');
   const [opened, { open, close }] = useDisclosure(false);
   const [deleteCandidate, setDeleteCandidate] = useState<EventGetResponse | null>(null);
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ export const ViewEventsPage: React.FC = () => {
   }
 
   return (
-    <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
+    <AuthGuard resourceDef={{ service: 'core', validRoles: ['manage:events'] }}>
       {deleteCandidate && (
         <Modal
           opened={opened}

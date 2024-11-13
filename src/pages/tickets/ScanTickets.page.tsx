@@ -76,7 +76,7 @@ export const ScanTicketsPage: React.FC = () => {
   const [videoDevices, setVideoDevices] = useState<{ value: string; label: string }[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
 
-  const api = useApi('events');
+  const api = useApi('core');
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -306,12 +306,9 @@ export const ScanTicketsPage: React.FC = () => {
   }
 
   return (
-    <AuthGuard resourceDef={{ service: 'events', validRoles: ['scan:tickets'] }}>
+    <AuthGuard resourceDef={{ service: 'core', validRoles: ['scan:tickets'] }}>
       <Box p="md">
-        <Title order={2} mb="xl">
-          Scan Ticket
-        </Title>
-
+      <Title order={2}>Scan Tickets</Title>
         <Paper shadow="sm" p="md" withBorder maw={600} mx="auto" w="100%">
           <Stack align="center" w="100%">
             <div
