@@ -16,6 +16,7 @@ import { MantineProvider } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import FullScreenLoader from './LoadingScreen';
 import { getRunEnvironmentConfig, ValidServices } from '@/config';
+import { CACHE_KEY_PREFIX } from '../AuthGuard';
 
 interface AuthContextDataWrapper {
   isLoggedIn: boolean;
@@ -39,6 +40,14 @@ export const useAuth = () => useContext(AuthContext);
 interface AuthProviderProps {
   children: ReactNode;
 }
+
+export const clearAuthCache = () => {
+  for (const key of Object.keys(sessionStorage)) {
+    if (key.startsWith(CACHE_KEY_PREFIX)) {
+      sessionStorage.removeItem(key);
+    }
+  }
+};
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { instance, inProgress, accounts } = useMsal();
@@ -153,6 +162,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
+      clearAuthCache()
       await instance.logoutRedirect();
     } catch (error) {
       console.error('Logout failed:', error);
