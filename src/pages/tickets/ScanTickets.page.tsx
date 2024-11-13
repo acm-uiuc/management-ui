@@ -160,14 +160,13 @@ export const ScanTicketsPage: React.FC = () => {
   };
 
   const processFrame = async () => {
-    if (!isScanningRef.current || !videoRef.current || !streamRef.current) {
+    if (!isScanningRef.current || !videoRef.current || !streamRef.current || showModal) {
       return;
     }
 
     try {
       const qrCode = await processVideoFrame(videoRef.current);
-      const now = Date.now();
-      if (qrCode && (qrCode !== lastScannedCode || now - lastScanTime.current > 2000)) {
+      if (qrCode && (qrCode !== lastScannedCode)) {
         try {
           const parsedData = JSON.parse(qrCode);
           if (['merch', 'ticket'].includes(parsedData['type'])) {
