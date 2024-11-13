@@ -30,7 +30,7 @@ interface AcmAppShellProps {
   showSidebar?: boolean;
 }
 
-const navItems = [
+export const navItems = [
   {
     link: '/events/manage',
     name: 'Event Calendar',
@@ -45,7 +45,7 @@ const navItems = [
   },
 ];
 
-const extLinks = [
+export const extLinks = [
   {
     link: 'https://go.acm.illinois.edu/create',
     name: 'Link Shortener',
@@ -90,7 +90,7 @@ function isSameParentPath(path1: string | undefined, path2: string | undefined) 
   return parentPath1 === parentPath2 && parentPath1 !== '/app';
 }
 
-const renderNavItems = (
+export const renderNavItems = (
   items: Record<string, any>[],
   active: string | undefined,
   navigate: CallableFunction

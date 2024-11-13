@@ -102,16 +102,6 @@ const AuthenticatedProfileDropdown: React.FC<ProfileDropdownProps> = ({ userData
               </div>
             </Group>
           </UnstyledButton>
-          <UnstyledButton className={classes.subLink} key="tenant_id">
-            <Group wrap="nowrap" align="flex-start">
-              <ThemeIcon size={40} variant="default" radius="md">
-                <IconBuilding
-                  style={{ width: rem(22), height: rem(22) }}
-                  color={theme.colors.blue[6]}
-                />
-              </ThemeIcon>
-            </Group>
-          </UnstyledButton>
           <Divider my="sm" />
           <Button
             variant="outline"
