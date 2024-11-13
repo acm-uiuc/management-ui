@@ -11,13 +11,11 @@ import { AuthGuard } from '@/components/AuthGuard';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
 import { useNavigate, useParams } from 'react-router-dom';
 
-
 export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 const repeatOptions = ['weekly', 'biweekly'] as const;
-
 
 const baseBodySchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -39,15 +37,14 @@ const requestBodySchema = baseBodySchema
   .refine((data) => (data.repeatEnds ? data.repeats !== undefined : true), {
     message: 'Repeat frequency is required when Repeat End is specified.',
   })
-  .refine((data) => !data.end || (data.end >= data.start), {
-    message: "Event end date cannot be earlier than the start date.",
-    path: ["end"],
+  .refine((data) => !data.end || data.end >= data.start, {
+    message: 'Event end date cannot be earlier than the start date.',
+    path: ['end'],
   })
-  .refine((data) => !data.repeatEnds || (data.repeatEnds >= data.start), {
-    message: "Repeat end date cannot be earlier than the start date.",
-    path: ["repeatEnds"],
+  .refine((data) => !data.repeatEnds || data.repeatEnds >= data.start, {
+    message: 'Repeat end date cannot be earlier than the start date.',
+    path: ['repeatEnds'],
   });
-
 
 type EventPostRequest = z.infer<typeof requestBodySchema>;
 
@@ -108,7 +105,7 @@ export const ManageEventPage: React.FC = () => {
       title: '',
       description: '',
       start: new Date(),
-      end: new Date((new Date()).valueOf() + (3.6e+6)), // 1 hr later
+      end: new Date(new Date().valueOf() + 3.6e6), // 1 hr later
       location: 'ACM Room (Siebel CS 1104)',
       locationLink: 'https://maps.app.goo.gl/dwbBBBkfjkgj8gvA8',
       host: 'ACM',
@@ -124,8 +121,8 @@ export const ManageEventPage: React.FC = () => {
       const merchEndpoint = getRunEnvironmentConfig().ServiceConfiguration.merch.baseEndpoint;
       const ticketEndpoint = getRunEnvironmentConfig().ServiceConfiguration.tickets.baseEndpoint;
       const paidEventHref = paidEventId.startsWith('merch:')
-          ? `${merchEndpoint}/api/v1/merch/details?itemid=${paidEventId.slice(6)}`
-          : `${ticketEndpoint}/api/v1/event/details?eventid=${paidEventId}`
+        ? `${merchEndpoint}/api/v1/merch/details?itemid=${paidEventId.slice(6)}`
+        : `${ticketEndpoint}/api/v1/event/details?eventid=${paidEventId}`;
       const response = await api.get(paidEventHref);
       return Boolean(response.status < 299 && response.status >= 200);
     } catch (error) {
@@ -141,8 +138,11 @@ export const ManageEventPage: React.FC = () => {
         ...values,
         start: dayjs(values.start).format('YYYY-MM-DD[T]HH:mm:00'),
         end: values.end ? dayjs(values.end).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
-        repeatEnds: values.repeatEnds && values.repeats ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00') : undefined,
-        repeats: values.repeats ? values.repeats : undefined
+        repeatEnds:
+          values.repeatEnds && values.repeats
+            ? dayjs(values.repeatEnds).format('YYYY-MM-DD[T]HH:mm:00')
+            : undefined,
+        repeats: values.repeats ? values.repeats : undefined,
       };
 
       const eventURL = isEditing ? `/api/v1/events/${eventId}` : '/api/v1/events';
@@ -151,7 +151,7 @@ export const ManageEventPage: React.FC = () => {
         title: isEditing ? 'Event updated!' : 'Event created!',
         message: isEditing ? undefined : `The event ID is "${response.data.id}".`,
       });
-      navigate('/events/manage')
+      navigate('/events/manage');
     } catch (error) {
       setIsSubmitting(false);
       console.error('Error creating/editing event:', error);
@@ -215,14 +215,17 @@ export const ManageEventPage: React.FC = () => {
             {...form.getInputProps('host')}
           />
           <Switch
-            label={`Show on home page carousel${!form.values.repeats ? " and Discord" : ""}?`}
-            style={{paddingTop: '0.5em'}}
+            label={`Show on home page carousel${!form.values.repeats ? ' and Discord' : ''}?`}
+            style={{ paddingTop: '0.5em' }}
             {...form.getInputProps('featured', { type: 'checkbox' })}
           />
           <Select
             label="Repeats"
             placeholder="Select repeat frequency"
-            data={repeatOptions.map((option) => ({ value: option, label: capitalizeFirstLetter(option) }))}
+            data={repeatOptions.map((option) => ({
+              value: option,
+              label: capitalizeFirstLetter(option),
+            }))}
             clearable
             {...form.getInputProps('repeats')}
           />
@@ -240,7 +243,14 @@ export const ManageEventPage: React.FC = () => {
             {...form.getInputProps('paidEventId')}
           />
           <Button type="submit" mt="md">
-            {isSubmitting ? <><Loader size={16} color='white'/>Submitting...</> : `${isEditing ? 'Save' : 'Create'} Event` }
+            {isSubmitting ? (
+              <>
+                <Loader size={16} color="white" />
+                Submitting...
+              </>
+            ) : (
+              `${isEditing ? 'Save' : 'Create'} Event`
+            )}
           </Button>
         </form>
       </Box>

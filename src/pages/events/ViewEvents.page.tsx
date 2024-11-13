@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Box, Card, Text, Grid, SimpleGrid, Button, Flex, Table, Modal, Group } from '@mantine/core';
+import {
+  Title,
+  Box,
+  Card,
+  Text,
+  Grid,
+  SimpleGrid,
+  Button,
+  Flex,
+  Table,
+  Modal,
+  Group,
+} from '@mantine/core';
 import { z } from 'zod';
 import dayjs from 'dayjs';
 import { useApi } from '@/util/api';
@@ -83,18 +95,40 @@ export const ViewEventsPage: React.FC = () => {
 
   return (
     <AuthGuard resourceDef={{ service: 'events', validRoles: ['manage:events'] }}>
-      {deleteCandidate && 
-      <Modal opened={opened} onClose={() => {setDeleteCandidate(null); close();}} title="Confirm action">
-        <Text>Are you sure you want to delete the event <i>{deleteCandidate?.title}</i>?</Text>
-        <hr/>
-        <Group>
-          <Button leftSection={<IconTrash />} onClick={() => {deleteEvent(deleteCandidate?.id)}}>Delete</Button>
-        </Group>
-      </Modal> }
+      {deleteCandidate && (
+        <Modal
+          opened={opened}
+          onClose={() => {
+            setDeleteCandidate(null);
+            close();
+          }}
+          title="Confirm action"
+        >
+          <Text>
+            Are you sure you want to delete the event <i>{deleteCandidate?.title}</i>?
+          </Text>
+          <hr />
+          <Group>
+            <Button
+              leftSection={<IconTrash />}
+              onClick={() => {
+                deleteEvent(deleteCandidate?.id);
+              }}
+            >
+              Delete
+            </Button>
+          </Group>
+        </Modal>
+      )}
       <div>
-      <Button leftSection={<IconPlus size={14} />} onClick={() => {navigate('/events/add')}}>
-        New Calendar Event
-      </Button>
+        <Button
+          leftSection={<IconPlus size={14} />}
+          onClick={() => {
+            navigate('/events/add');
+          }}
+        >
+          New Calendar Event
+        </Button>
       </div>
 
       <Table>
@@ -124,10 +158,7 @@ export const ViewEventsPage: React.FC = () => {
               <Table.Td>{event.featured ? 'Yes' : 'No'}</Table.Td>
               <Table.Td>{capitalizeFirstLetter(event.repeats || 'Never') || 'Never'}</Table.Td>
               <Table.Td>
-                <Button
-                  component="a"
-                  href={`/events/edit/${event.id}`}
-                >
+                <Button component="a" href={`/events/edit/${event.id}`}>
                   Edit
                 </Button>
               </Table.Td>
