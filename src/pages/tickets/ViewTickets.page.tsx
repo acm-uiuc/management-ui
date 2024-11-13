@@ -144,19 +144,21 @@ const ViewTicketsPage: React.FC = () => {
                   <Table.Td>{ticket.purchaserData.size || 'N/A'}</Table.Td>
                   <Table.Td>{ticket.ticketId}</Table.Td>
                   <Table.Td>
-                    {(!(ticket.fulfilled || ticket.refunded)) && <AuthGuard
-                      resourceDef={{ service: 'core', validRoles: ['scan:tickets'] }}
-                      isAppShell={false}
-                    >
-                      <Button
-                        variant="outline"
-                        onClick={() => checkInUser(ticket)}
-                        id={`${ticket.ticketId}-manual-checkin`}
-                        data-testid={`${ticket.ticketId}-manual-checkin`}
+                    {!(ticket.fulfilled || ticket.refunded) && (
+                      <AuthGuard
+                        resourceDef={{ service: 'core', validRoles: ['scan:tickets'] }}
+                        isAppShell={false}
                       >
-                        Manually Check In
-                      </Button>
-                    </AuthGuard>}
+                        <Button
+                          variant="outline"
+                          onClick={() => checkInUser(ticket)}
+                          id={`${ticket.ticketId}-manual-checkin`}
+                          data-testid={`${ticket.ticketId}-manual-checkin`}
+                        >
+                          Manually Check In
+                        </Button>
+                      </AuthGuard>
+                    )}
                   </Table.Td>
                 </Table.Tr>
               );

@@ -162,7 +162,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
-      clearAuthCache()
+      clearAuthCache();
       await instance.logoutRedirect();
     } catch (error) {
       console.error('Logout failed:', error);

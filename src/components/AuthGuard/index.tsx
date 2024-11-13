@@ -9,26 +9,26 @@ export const CACHE_KEY_PREFIX = 'auth_response_cache_';
 const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 
 type CacheData = {
-  data: any;  // Just the JSON response data
+  data: any; // Just the JSON response data
   timestamp: number;
 };
 
-export type ResourceDefinition = { 
-  service: ValidService; 
-  validRoles: string[] 
+export type ResourceDefinition = {
+  service: ValidService;
+  validRoles: string[];
 };
 
-const getAuthCacheKey = (service: ValidService, route: string) => 
+const getAuthCacheKey = (service: ValidService, route: string) =>
   `${CACHE_KEY_PREFIX}${service}_${route}`;
 
 const getCachedResponse = (service: ValidService, route: string): CacheData | null => {
   const cached = sessionStorage.getItem(getAuthCacheKey(service, route));
   if (!cached) return null;
-  
+
   try {
     const data = JSON.parse(cached) as CacheData;
     const now = Date.now();
-    
+
     if (now - data.timestamp <= CACHE_DURATION) {
       return data;
     }
@@ -44,7 +44,7 @@ const getCachedResponse = (service: ValidService, route: string): CacheData | nu
 const setCachedResponse = (service: ValidService, route: string, data: any) => {
   const cacheData: CacheData = {
     data,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
   sessionStorage.setItem(getAuthCacheKey(service, route), JSON.stringify(cacheData));
 };
@@ -145,6 +145,6 @@ export const AuthGuard: React.FC<{
       </AcmAppShell>
     );
   }
-  
+
   return <>{children}</>;
 };
