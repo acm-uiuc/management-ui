@@ -51,7 +51,7 @@ export interface APIResponseSchema {
 
 type QRData = QRDataMerch | QRDataTicket;
 
-const recursiveToCamel = (item: unknown): unknown => {
+export const recursiveToCamel = (item: unknown): unknown => {
   if (Array.isArray(item)) {
     return item.map((el: unknown) => recursiveToCamel(el));
   } else if (typeof item === 'function' || item !== Object(item)) {
@@ -308,7 +308,7 @@ export const ScanTicketsPage: React.FC = () => {
   return (
     <AuthGuard resourceDef={{ service: 'core', validRoles: ['scan:tickets'] }}>
       <Box p="md">
-      <Title order={2}>Scan Tickets</Title>
+        <Title order={2}>Scan Tickets</Title>
         <Paper shadow="sm" p="md" withBorder maw={600} mx="auto" w="100%">
           <Stack align="center" w="100%">
             <div

@@ -7,10 +7,11 @@ import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
 
 export type ResourceDefinition = { service: ValidService; validRoles: string[] };
 
-export const AuthGuard: React.FC<{ resourceDef: ResourceDefinition; children: ReactNode }> = ({
-  resourceDef,
-  children,
-}) => {
+export const AuthGuard: React.FC<{
+  resourceDef: ResourceDefinition;
+  children: ReactNode;
+  isAppShell?: boolean;
+}> = ({ resourceDef, children, isAppShell = true }) => {
   const { service, validRoles } = resourceDef;
   const { baseEndpoint, authCheckRoute, friendlyName } =
     getRunEnvironmentConfig().ServiceConfiguration[service];
@@ -40,23 +41,32 @@ export const AuthGuard: React.FC<{ resourceDef: ResourceDefinition; children: Re
     getAuth();
   }, [baseEndpoint, authCheckRoute]);
   if (isAuthenticated === null) {
-    return <FullScreenLoader />;
+    if (isAppShell) {
+      return <FullScreenLoader />;
+    }
+    return null;
   }
   if (!isAuthenticated) {
+    if (isAppShell) {
+      return (
+        <AcmAppShell>
+          <Title>Unauthenticated</Title>
+          <Text>
+            Please request access to the <Code>{friendlyName}</Code> service from the ACM
+            Infrastructure Team.
+          </Text>
+        </AcmAppShell>
+      );
+    }
+    return null;
+  }
+  if (isAppShell) {
     return (
       <AcmAppShell>
-        <Title>Unauthenticated</Title>
-        <Text>
-          Please request access to the <Code>{friendlyName}</Code> service from the ACM
-          Infrastructure Team.
-        </Text>
+        <Title order={1}>{friendlyName}</Title>
+        {children}
       </AcmAppShell>
     );
   }
-  return (
-    <AcmAppShell>
-      <Title order={1}>{friendlyName}</Title>
-      {children}
-    </AcmAppShell>
-  );
+  return <>{children}</>;
 };
