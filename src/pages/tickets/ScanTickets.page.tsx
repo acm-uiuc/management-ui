@@ -343,6 +343,7 @@ export const ScanTicketsPage: React.FC = () => {
               placeholder="Choose a camera"
               data={videoDevices}
               value={selectedDevice}
+              allowDeselect={false}
               onChange={(value) => {
                 setSelectedDevice(value);
                 if (isScanning) {
