@@ -8,7 +8,14 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCalendar, IconCoin, IconEye, IconLink, IconPlus, IconFileDollar, IconPizza } from '@tabler/icons-react';
+import {
+  IconCalendar,
+  IconCoin,
+  IconLink,
+  IconFileDollar,
+  IconPizza,
+  IconTicket,
+} from '@tabler/icons-react';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
@@ -28,6 +35,12 @@ const navItems = [
     link: '/events/manage',
     name: 'Event Calendar',
     icon: IconCalendar,
+    description: null,
+  },
+  {
+    link: '/tickets/scan',
+    name: 'Scan Tickets',
+    icon: IconTicket,
     description: null,
   },
 ];

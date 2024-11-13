@@ -10,6 +10,7 @@ import { useAuth } from './components/AuthContext';
 import { HomePage } from './pages/Home.page';
 import { ManageEventPage } from './pages/events/ManageEvent.page';
 import { ViewEventsPage } from './pages/events/ViewEvents.page';
+import { ScanTicketsPage } from './pages/tickets/ScanTickets.page';
 
 const commonRoutes = [
   {
@@ -67,6 +68,10 @@ const authenticatedRouter = createBrowserRouter([
   {
     path: '/events/manage',
     element: <ViewEventsPage />,
+  },
+  {
+    path: '/tickets/scan',
+    element: <ScanTicketsPage />,
   },
 ]);
 
