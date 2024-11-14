@@ -13,7 +13,6 @@ import {
   InteractionStatus,
 } from '@azure/msal-browser';
 import { MantineProvider } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
 import FullScreenLoader from './LoadingScreen';
 import { getRunEnvironmentConfig, ValidServices } from '@/config';
 import { CACHE_KEY_PREFIX } from '../AuthGuard';
@@ -54,6 +53,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const [userData, setUserData] = useState<AuthContextData | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  const navigate = (path: string) => {
+    window.location.href = path;
+  };
 
   useEffect(() => {
     const handleRedirect = async () => {
@@ -150,15 +153,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [userData, instance]);
 
-  const loginMsal = useCallback(async () => {
-    const accountsLocal = instance.getAllAccounts();
-    if (accountsLocal.length > 0) {
-      instance.setActiveAccount(accountsLocal[0]);
-      setIsLoggedIn(true);
-    } else {
-      await instance.loginRedirect();
-    }
-  }, [instance]);
+  const loginMsal = useCallback(
+    async (returnTo: string) => {
+      const accountsLocal = instance.getAllAccounts();
+      if (accountsLocal.length > 0) {
+        instance.setActiveAccount(accountsLocal[0]);
+        setIsLoggedIn(true);
+      } else {
+        await instance.loginRedirect({
+          scopes: ['openid', 'profile', 'email'],
+          state: returnTo,
+          redirectUri: `${window.location.origin}/auth/callback`,
+        });
+      }
+    },
+    [instance]
+  );
 
   const logout = useCallback(async () => {
     try {

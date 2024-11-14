@@ -6,7 +6,7 @@ export const Error500Page: React.FC = () => (
   <>
     <HeaderNavbar />
     <Container>
-      <Title>Page Not Found</Title>
+      <Title>An Error Occurred</Title>
       <Text>
         Perhaps you would like to <Anchor href="/">go home</Anchor>?
       </Text>

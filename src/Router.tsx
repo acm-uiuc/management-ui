@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactNode } from 'react';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider, useLocation } from 'react-router-dom';
 import { Anchor } from '@mantine/core';
 import { LoginPage } from './pages/Login.page';
 import { LogoutPage } from './pages/Logout.page';
@@ -13,6 +13,25 @@ import { ViewEventsPage } from './pages/events/ViewEvents.page';
 import { ScanTicketsPage } from './pages/tickets/ScanTickets.page';
 import { ViewTicketsPage } from './pages/tickets/ViewTickets.page';
 import { SelectTicketsPage } from './pages/tickets/SelectEventId.page';
+import { element } from 'prop-types';
+import AuthCallback from './components/AuthContext/AuthCallbackHandler.page';
+
+// Component to handle redirects to login with return path
+const LoginRedirect: React.FC = () => {
+  const location = useLocation();
+
+  // Don't store login-related paths
+  const excludedPaths = ['/login', '/logout', '/force_login'];
+  if (excludedPaths.includes(location.pathname)) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Include search params and hash in the return URL if they exist
+  const returnPath = location.pathname + location.search + location.hash;
+  const loginUrl = `/login?returnTo=${encodeURIComponent(returnPath)}`;
+
+  return <Navigate to={loginUrl} replace />;
+};
 
 const commonRoutes = [
   {
@@ -24,8 +43,8 @@ const commonRoutes = [
     element: <LogoutPage />,
   },
   {
-    path: '*',
-    element: <Error404Page />,
+    path: '/auth/callback',
+    element: <AuthCallback />,
   },
 ];
 
@@ -38,6 +57,11 @@ const unauthenticatedRouter = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  // Catch-all route that preserves the attempted path
+  {
+    path: '*',
+    element: <LoginRedirect />,
   },
 ]);
 
@@ -83,6 +107,11 @@ const authenticatedRouter = createBrowserRouter([
     path: '/tickets/manage/:eventId',
     element: <ViewTicketsPage />,
   },
+  // Catch-all route for authenticated users shows 404 page
+  {
+    path: '*',
+    element: <Error404Page />,
+  },
 ]);
 
 interface ErrorBoundaryProps {
@@ -92,6 +121,7 @@ interface ErrorBoundaryProps {
 const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children }) => {
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const { isLoggedIn } = useAuth();
 
   const onError = (errorObj: Error) => {
     setHasError(true);
@@ -102,8 +132,8 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children }) => {
     const errorHandler = (event: ErrorEvent) => {
       onError(event.error);
     };
-    window.addEventListener('error', errorHandler);
 
+    window.addEventListener('error', errorHandler);
     return () => {
       window.removeEventListener('error', errorHandler);
     };
@@ -111,7 +141,7 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children }) => {
 
   if (hasError && error) {
     if (error.message === '404') {
-      return <Error404Page />;
+      return isLoggedIn ? <Error404Page /> : <LoginRedirect />;
     }
     return <Error500Page />;
   }

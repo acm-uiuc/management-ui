@@ -3,7 +3,9 @@ import { useMsal } from '@azure/msal-react';
 import { InteractionStatus } from '@azure/msal-browser';
 import { useAuth } from '../AuthContext';
 
-export function AcmLoginButton(props: ButtonProps & React.ComponentPropsWithoutRef<'button'>) {
+export function AcmLoginButton(
+  props: ButtonProps & React.ComponentPropsWithoutRef<'button'> & { returnTo: string }
+) {
   const { loginMsal } = useAuth();
   const { inProgress } = useMsal();
   return (
@@ -11,9 +13,9 @@ export function AcmLoginButton(props: ButtonProps & React.ComponentPropsWithoutR
       leftSection={null}
       color="#FF5F05"
       variant="filled"
-      {...props}
+      {...{ ...props, returnTo: undefined }}
       onClick={async () => {
-        await loginMsal();
+        await loginMsal(props.returnTo);
       }}
     />
   );

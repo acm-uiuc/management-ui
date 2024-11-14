@@ -184,7 +184,12 @@ const SelectTicketsPage: React.FC = () => {
         Tickets & Merchandise
       </Title>
       <AuthGuard isAppShell={false} resourceDef={{ service: 'core', validRoles: ['scan:tickets'] }}>
-        <Button variant="primary" onClick={() => handleScanClick()} id={`merch-scan`} style={{marginBottom: '2vh'}}>
+        <Button
+          variant="primary"
+          onClick={() => handleScanClick()}
+          id={`merch-scan`}
+          style={{ marginBottom: '2vh' }}
+        >
           Scan Ticket/Merch Codes
         </Button>
       </AuthGuard>
