@@ -39,7 +39,7 @@ export const navItems = [
   },
   {
     link: '/tickets',
-    name: 'Merch/Ticketing',
+    name: 'Ticketing/Merch',
     icon: IconTicket,
     description: null,
   },
