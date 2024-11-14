@@ -166,7 +166,7 @@ export const ManageEventPage: React.FC = () => {
   }
 
   return (
-    <AuthGuard resourceDef={{ service: 'core', validRoles: ['manage:events'] }}>
+    <AuthGuard resourceDef={{ service: 'core', validRoles: ['manage:evednts'] }}>
       <Title order={2}>{isEditing ? `Edit` : `Add`} Event</Title>
       <Box maw={400} mx="auto" mt="xl">
         <form onSubmit={form.onSubmit(handleSubmit)}>

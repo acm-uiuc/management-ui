@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Code, Text, Title } from '@mantine/core';
+import { Box, Card, Code, Spoiler, Text, Title } from '@mantine/core';
 import { AcmAppShell } from '@/components/AppShell';
 import { useApi } from '@/util/api';
 import { getRunEnvironmentConfig, ValidService } from '@/config';
@@ -67,6 +67,8 @@ export const AuthGuard: React.FC<{
   const { baseEndpoint, authCheckRoute, friendlyName } =
     getRunEnvironmentConfig().ServiceConfiguration[service];
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [roles, setRoles] = useState<string[] | null>(null);
   const api = useApi(service);
 
   useEffect(() => {
@@ -88,6 +90,8 @@ export const AuthGuard: React.FC<{
               break;
             }
           }
+          setUsername(cachedData.data.username);
+          setRoles(cachedData.data.roles);
           setIsAuthenticated(authenticated);
           return;
         }
@@ -106,6 +110,8 @@ export const AuthGuard: React.FC<{
           }
         }
         setIsAuthenticated(authenticated);
+        setRoles(result.data.roles);
+        setUsername(result.data.username);
       } catch (e) {
         setIsAuthenticated(false);
         console.error(e);
@@ -126,11 +132,22 @@ export const AuthGuard: React.FC<{
     if (isAppShell) {
       return (
         <AcmAppShell>
-          <Title>Unauthenticated</Title>
+          <Title>Unauthorized</Title>
           <Text>
-            Please request access to the <Code>{friendlyName}</Code> service from the ACM
-            Infrastructure Team.
+            You have not been granted access to this module. Please fill out the <a href="https://go.acm.illinois.edu/access_request">access request form</a> to request access to this module.
           </Text>
+          <Card withBorder>
+            <Title order={3} mb="md">
+              Diagnostic Details
+            </Title>
+            <ul>
+              <li>Endpoint: {baseEndpoint}</li>
+              <li>Service: {friendlyName} (<code>{service}</code>)</li>
+              <li>User: {username}</li>
+              <li>Roles: {roles ? roles.join(", "): <code>none</code>}</li>
+              <li>Time: {(new Date()).toDateString()} {(new Date()).toLocaleTimeString()}</li>
+            </ul>
+          </Card>
         </AcmAppShell>
       );
     }
