@@ -1,9 +1,10 @@
 import { Center } from '@mantine/core';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { useAuth } from '@/components/AuthContext';
 import { LoginComponent } from '@/components/LoginComponent';
 import { HeaderNavbar } from '@/components/Navbar';
-import { useAuth } from '@/components/AuthContext';
 
 export function LoginPage() {
   const navigate = useNavigate();

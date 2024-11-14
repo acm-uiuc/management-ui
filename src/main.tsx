@@ -1,6 +1,7 @@
-import ReactDOM from 'react-dom/client';
-import { MsalProvider } from '@azure/msal-react';
 import { Configuration, PublicClientApplication } from '@azure/msal-browser';
+import { MsalProvider } from '@azure/msal-react';
+import ReactDOM from 'react-dom/client';
+
 import App from './App';
 import { AuthProvider } from './components/AuthContext';
 import '@ungap/with-resolvers';

@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
-import { render as rtlRender } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { render as rtlRender } from '@testing-library/react';
+import React, { ReactElement } from 'react';
 
 interface WrapperProps {
   children?: React.ReactNode;

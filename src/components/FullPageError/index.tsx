@@ -1,5 +1,5 @@
-import React, { MouseEventHandler } from 'react';
 import { Container, Paper, Title, Text, Button } from '@mantine/core';
+import React, { MouseEventHandler } from 'react';
 
 interface FullPageErrorProps {
   errorCode?: number;

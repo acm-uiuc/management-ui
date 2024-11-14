@@ -1,5 +1,6 @@
-import React from 'react';
 import { Container, Title, Text, Anchor } from '@mantine/core';
+import React from 'react';
+
 import { HeaderNavbar } from '@/components/Navbar';
 
 export const Error404Page: React.FC<{ showNavbar?: boolean }> = ({ showNavbar }) => {

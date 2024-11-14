@@ -1,6 +1,7 @@
-import { Button, ButtonProps } from '@mantine/core';
-import { useMsal } from '@azure/msal-react';
 import { InteractionStatus } from '@azure/msal-browser';
+import { useMsal } from '@azure/msal-react';
+import { Button, ButtonProps } from '@mantine/core';
+
 import { useAuth } from '../AuthContext';
 
 export function AcmLoginButton(

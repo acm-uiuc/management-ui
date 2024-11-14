@@ -1,9 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react';
 import { Box, Card, Code, Spoiler, Text, Title } from '@mantine/core';
+import React, { ReactNode, useEffect, useState } from 'react';
+
 import { AcmAppShell } from '@/components/AppShell';
-import { useApi } from '@/util/api';
-import { getRunEnvironmentConfig, ValidService } from '@/config';
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { getRunEnvironmentConfig, ValidService } from '@/config';
+import { useApi } from '@/util/api';
 
 export const CACHE_KEY_PREFIX = 'auth_response_cache_';
 const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
@@ -134,7 +135,9 @@ export const AuthGuard: React.FC<{
         <AcmAppShell>
           <Title>Unauthorized</Title>
           <Text>
-            You have not been granted access to this module. Please fill out the <a href="https://go.acm.illinois.edu/access_request">access request form</a> to request access to this module.
+            You have not been granted access to this module. Please fill out the{' '}
+            <a href="https://go.acm.illinois.edu/access_request">access request form</a> to request
+            access to this module.
           </Text>
           <Card withBorder>
             <Title order={3} mb="md">
@@ -142,10 +145,14 @@ export const AuthGuard: React.FC<{
             </Title>
             <ul>
               <li>Endpoint: {baseEndpoint}</li>
-              <li>Service: {friendlyName} (<code>{service}</code>)</li>
+              <li>
+                Service: {friendlyName} (<code>{service}</code>)
+              </li>
               <li>User: {username}</li>
-              <li>Roles: {roles ? roles.join(", "): <code>none</code>}</li>
-              <li>Time: {(new Date()).toDateString()} {(new Date()).toLocaleTimeString()}</li>
+              <li>Roles: {roles ? roles.join(', ') : <code>none</code>}</li>
+              <li>
+                Time: {new Date().toDateString()} {new Date().toLocaleTimeString()}
+              </li>
             </ul>
           </Card>
         </AcmAppShell>

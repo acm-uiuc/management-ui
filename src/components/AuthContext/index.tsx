@@ -1,3 +1,10 @@
+import {
+  AuthenticationResult,
+  InteractionRequiredAuthError,
+  InteractionStatus,
+} from '@azure/msal-browser';
+import { useMsal } from '@azure/msal-react';
+import { MantineProvider } from '@mantine/core';
 import React, {
   createContext,
   ReactNode,
@@ -6,16 +13,12 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { useMsal } from '@azure/msal-react';
-import {
-  AuthenticationResult,
-  InteractionRequiredAuthError,
-  InteractionStatus,
-} from '@azure/msal-browser';
-import { MantineProvider } from '@mantine/core';
-import FullScreenLoader from './LoadingScreen';
-import { getRunEnvironmentConfig, ValidServices } from '@/config';
+
 import { CACHE_KEY_PREFIX } from '../AuthGuard';
+
+import FullScreenLoader from './LoadingScreen';
+
+import { getRunEnvironmentConfig, ValidServices } from '@/config';
 
 interface AuthContextDataWrapper {
   isLoggedIn: boolean;
@@ -83,9 +86,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (response) {
       const { account } = response;
       if (account) {
+        const [lastName, firstName] = accounts[0].name?.split(',')! || [];
         setUserData({
           email: account.username,
-          name: account.name,
+          name: `${firstName} ${lastName}`,
         });
         setIsLoggedIn(true);
       }

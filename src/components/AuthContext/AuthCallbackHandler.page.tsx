@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
+import React, { useEffect } from 'react';
+
 import FullScreenLoader from './LoadingScreen';
 
 export const AuthCallback: React.FC = () => {
@@ -10,7 +11,6 @@ export const AuthCallback: React.FC = () => {
 
   useEffect(() => {
     const handleCallback = async () => {
-      
       try {
         // Check if we have pending redirects
         const response = await instance.handleRedirectPromise();

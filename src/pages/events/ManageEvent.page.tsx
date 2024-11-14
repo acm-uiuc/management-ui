@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import { Title, Box, TextInput, Textarea, Switch, Select, Button, Loader } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
 import { DateTimePicker } from '@mantine/dates';
-import { z } from 'zod';
-import dayjs from 'dayjs';
+import { useForm, zodResolver } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { useApi } from '@/util/api';
-import { getRunEnvironmentConfig } from '@/config';
-import { AuthGuard } from '@/components/AuthGuard';
-import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { z } from 'zod';
+
+import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { AuthGuard } from '@/components/AuthGuard';
+import { getRunEnvironmentConfig } from '@/config';
+import { useApi } from '@/util/api';
 
 export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);

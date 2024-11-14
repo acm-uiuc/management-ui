@@ -2,12 +2,15 @@
 
 import { Group, Divider, Box, Burger, Drawer, ScrollArea, rem } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import classes from './index.module.css';
-import LogoBadge from './Logo';
-import { AuthContextData, useAuth } from '../AuthContext';
-import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
-import { extLinks, navItems, renderNavItems } from '../AppShell';
 import { useNavigate } from 'react-router-dom';
+
+import { extLinks, navItems, renderNavItems } from '../AppShell';
+import { AuthContextData, useAuth } from '../AuthContext';
+import { DarkModeSwitch } from '../DarkModeSwitch';
+import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
+
+import LogoBadge from './Logo';
+import classes from './index.module.css';
 
 const HeaderNavbar: React.FC = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
@@ -21,7 +24,8 @@ const HeaderNavbar: React.FC = () => {
             <LogoBadge />
           </Group>
           <Group h="100%" justify="end" align="center" gap={10} visibleFrom="sm">
-            {isLoggedIn ? `Welcome ${userData?.name}!` : 'Not Logged In'}
+            <DarkModeSwitch />
+            {userData ? <AuthenticatedProfileDropdown userData={userData} /> : null}
           </Group>
           <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
         </Group>

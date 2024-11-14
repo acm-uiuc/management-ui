@@ -1,32 +1,33 @@
+import { Anchor } from '@mantine/core';
+import { element } from 'prop-types';
 import React, { useState, useEffect, ReactNode } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider, useLocation } from 'react-router-dom';
-import { Anchor } from '@mantine/core';
-import { LoginPage } from './pages/Login.page';
-import { LogoutPage } from './pages/Logout.page';
-import { Error404Page } from './pages/Error404.page';
-import { Error500Page } from './pages/Error500.page';
+
 import { AcmAppShell } from './components/AppShell';
 import { useAuth } from './components/AuthContext';
+import AuthCallback from './components/AuthContext/AuthCallbackHandler.page';
+import { Error404Page } from './pages/Error404.page';
+import { Error500Page } from './pages/Error500.page';
 import { HomePage } from './pages/Home.page';
+import { LoginPage } from './pages/Login.page';
+import { LogoutPage } from './pages/Logout.page';
 import { ManageEventPage } from './pages/events/ManageEvent.page';
 import { ViewEventsPage } from './pages/events/ViewEvents.page';
 import { ScanTicketsPage } from './pages/tickets/ScanTickets.page';
-import { ViewTicketsPage } from './pages/tickets/ViewTickets.page';
 import { SelectTicketsPage } from './pages/tickets/SelectEventId.page';
-import { element } from 'prop-types';
-import AuthCallback from './components/AuthContext/AuthCallbackHandler.page';
+import { ViewTicketsPage } from './pages/tickets/ViewTickets.page';
 
 // Component to handle redirects to login with return path
 const LoginRedirect: React.FC = () => {
   const location = useLocation();
-  
+
   // Don't store login-related paths and ALLOW the callback path
   const excludedPaths = [
-    '/login', 
-    '/logout', 
-    '/force_login', 
+    '/login',
+    '/logout',
+    '/force_login',
     '/a',
-    '/auth/callback'  // Add this to excluded paths
+    '/auth/callback', // Add this to excluded paths
   ];
 
   if (excludedPaths.includes(location.pathname)) {

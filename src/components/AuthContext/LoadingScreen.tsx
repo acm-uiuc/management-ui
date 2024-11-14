@@ -1,5 +1,5 @@
-import React from 'react';
 import { LoadingOverlay, useMantineColorScheme } from '@mantine/core';
+import React from 'react';
 
 const FullScreenLoader = () => {
   const { colorScheme } = useMantineColorScheme();

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Popover,
   Box,
@@ -12,11 +11,13 @@ import {
   Button,
   rem,
   useMantineTheme,
+  Avatar,
 } from '@mantine/core';
-
 import { IconChevronDown, IconUser, IconMail, IconBuilding } from '@tabler/icons-react';
-import classes from '../Navbar/index.module.css';
+import { useState } from 'react';
+
 import { AuthContextData, useAuth } from '../AuthContext';
+import classes from '../Navbar/index.module.css';
 
 interface ProfileDropdownProps {
   userData?: AuthContextData;
@@ -51,7 +52,14 @@ const AuthenticatedProfileDropdown: React.FC<ProfileDropdownProps> = ({ userData
         >
           <Center inline>
             <Box component="span" mr={5}>
-              My Account
+              <Group visibleFrom="sm">
+                <Avatar name={userData.name} color="initials"></Avatar>
+              </Group>
+              <Group hiddenFrom="sm">
+                <Text size="sm" fw={500}>
+                  My Account
+                </Text>
+              </Group>
             </Box>
             <IconChevronDown
               style={{ width: rem(16), height: rem(16) }}

@@ -1,4 +1,3 @@
-import React, { useEffect, useState, useRef } from 'react';
 import {
   Title,
   Box,
@@ -13,11 +12,13 @@ import {
   Select,
 } from '@mantine/core';
 import { IconAlertCircle, IconCheck, IconCamera } from '@tabler/icons-react';
-import { useApi } from '@/util/api';
-import { AuthGuard } from '@/components/AuthGuard';
-import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
-import { useParams } from 'react-router-dom';
 import jsQR from 'jsqr';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+
+import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { AuthGuard } from '@/components/AuthGuard';
+import { useApi } from '@/util/api';
 
 interface QRDataMerch {
   type: string;

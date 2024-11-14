@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   Title,
   Box,
@@ -12,17 +11,20 @@ import {
   Modal,
   Group,
 } from '@mantine/core';
-import { z } from 'zod';
-import dayjs from 'dayjs';
-import { useApi } from '@/util/api';
-import { getRunEnvironmentConfig } from '@/config';
-import { AuthGuard } from '@/components/AuthGuard';
-import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDisclosure } from '@mantine/hooks';
+import { z } from 'zod';
+
 import { capitalizeFirstLetter } from './ManageEvent.page';
+
+import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
+import { AuthGuard } from '@/components/AuthGuard';
+import { getRunEnvironmentConfig } from '@/config';
+import { useApi } from '@/util/api';
 
 const repeatOptions = ['weekly', 'biweekly'] as const;
 

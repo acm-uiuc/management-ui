@@ -18,9 +18,10 @@ import {
 } from '@tabler/icons-react';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
+
 import { useAuth } from '../AuthContext';
 import { HeaderNavbar } from '../Navbar';
+import { AuthenticatedProfileDropdown } from '../ProfileDropdown';
 
 interface AcmAppShellProps {
   children: ReactNode;
