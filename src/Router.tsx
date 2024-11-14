@@ -19,9 +19,16 @@ import AuthCallback from './components/AuthContext/AuthCallbackHandler.page';
 // Component to handle redirects to login with return path
 const LoginRedirect: React.FC = () => {
   const location = useLocation();
+  
+  // Don't store login-related paths and ALLOW the callback path
+  const excludedPaths = [
+    '/login', 
+    '/logout', 
+    '/force_login', 
+    '/a',
+    '/auth/callback'  // Add this to excluded paths
+  ];
 
-  // Don't store login-related paths
-  const excludedPaths = ['/login', '/logout', '/force_login'];
   if (excludedPaths.includes(location.pathname)) {
     return <Navigate to="/login" replace />;
   }
@@ -29,7 +36,6 @@ const LoginRedirect: React.FC = () => {
   // Include search params and hash in the return URL if they exist
   const returnPath = location.pathname + location.search + location.hash;
   const loginUrl = `/login?returnTo=${encodeURIComponent(returnPath)}`;
-
   return <Navigate to={loginUrl} replace />;
 };
 

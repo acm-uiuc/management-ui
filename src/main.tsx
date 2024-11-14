@@ -12,7 +12,7 @@ const msalConfiguration: Configuration = {
   auth: {
     clientId: envConfig.AadValidClientId,
     authority: 'https://login.microsoftonline.com/c8d9148f-9a59-4db3-827d-42ea0c2b6e2e',
-    redirectUri: `${window.location.origin}/`,
+    redirectUri: `${window.location.origin}/auth/callback`,
     postLogoutRedirectUri: `${window.location.origin}/logout`,
   },
   cache: {

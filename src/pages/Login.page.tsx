@@ -1,5 +1,5 @@
 import { Center } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { LoginComponent } from '@/components/LoginComponent';
 import { HeaderNavbar } from '@/components/Navbar';
@@ -8,11 +8,19 @@ import { useAuth } from '@/components/AuthContext';
 export function LoginPage() {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/home');
+      const returnTo = searchParams.get('returnTo');
+      if (returnTo) {
+        navigate(returnTo);
+      } else {
+        navigate('/home');
+      }
     }
-  }, [navigate, isLoggedIn]);
+  }, [navigate, isLoggedIn, searchParams]);
+
   return (
     <div style={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
       <HeaderNavbar />

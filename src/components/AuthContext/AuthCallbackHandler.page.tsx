@@ -10,15 +10,15 @@ export const AuthCallback: React.FC = () => {
 
   useEffect(() => {
     const handleCallback = async () => {
+      
       try {
+        // Check if we have pending redirects
         const response = await instance.handleRedirectPromise();
-
         if (!response) {
           navigate('/');
           return;
         }
         const returnPath = response.state || '/';
-
         const account = response.account;
         if (account) {
           instance.setActiveAccount(account);
@@ -31,7 +31,14 @@ export const AuthCallback: React.FC = () => {
       }
     };
 
-    handleCallback();
+    setTimeout(() => {
+      handleCallback();
+    }, 100);
+
+    // Cleanup function
+    return () => {
+      console.log('Callback component unmounting'); // Debug log 8
+    };
   }, [instance, navigate]);
 
   return <FullScreenLoader />;

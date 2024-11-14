@@ -139,7 +139,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const interactiveRequest = {
             scopes: ['.default'], // Adjust scopes as needed
-            redirectUri: '/', // Redirect URI after login
+            redirectUri: '/auth/callback', // Redirect URI after login
           };
           const tokenResponse: any = await instance.acquireTokenRedirect(interactiveRequest);
           return tokenResponse.accessToken;

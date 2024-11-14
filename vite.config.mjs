@@ -13,6 +13,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './vitest.setup.mjs',
   },
+  server: {
+    historyApiFallback: true,
+  },
   build: {
     rollupOptions: {
       output: {
