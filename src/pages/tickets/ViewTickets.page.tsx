@@ -116,7 +116,7 @@ const ViewTicketsPage: React.FC = () => {
   const currentTickets = allTickets.slice(startIndex, endIndex);
   return (
     <AuthGuard resourceDef={{ service: 'core', validRoles: ['manage:tickets'] }}>
-      <Title order={2}>View Tickets</Title>
+      <Title order={2}>View Tickets/Merch Sales</Title>
       <div>
         <br />
         <Title order={4}>{pluralize('item', totalQuantitySold, true)} sold</Title>
@@ -155,7 +155,7 @@ const ViewTicketsPage: React.FC = () => {
                           id={`${ticket.ticketId}-manual-checkin`}
                           data-testid={`${ticket.ticketId}-manual-checkin`}
                         >
-                          Manually Check In
+                          Mark as Fulfilled
                         </Button>
                       </AuthGuard>
                     )}

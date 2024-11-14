@@ -12,6 +12,7 @@ import { ManageEventPage } from './pages/events/ManageEvent.page';
 import { ViewEventsPage } from './pages/events/ViewEvents.page';
 import { ScanTicketsPage } from './pages/tickets/ScanTickets.page';
 import { ViewTicketsPage } from './pages/tickets/ViewTickets.page';
+import { SelectTicketsPage } from './pages/tickets/SelectEventId.page';
 
 const commonRoutes = [
   {
@@ -73,6 +74,10 @@ const authenticatedRouter = createBrowserRouter([
   {
     path: '/tickets/scan',
     element: <ScanTicketsPage />,
+  },
+  {
+    path: '/tickets',
+    element: <SelectTicketsPage />,
   },
   {
     path: '/tickets/manage/:eventId',

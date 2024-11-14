@@ -166,7 +166,7 @@ export const ScanTicketsPage: React.FC = () => {
 
     try {
       const qrCode = await processVideoFrame(videoRef.current);
-      if (qrCode && (qrCode !== lastScannedCode)) {
+      if (qrCode && qrCode !== lastScannedCode) {
         try {
           const parsedData = JSON.parse(qrCode);
           if (['merch', 'ticket'].includes(parsedData['type'])) {

@@ -33,13 +33,13 @@ interface AcmAppShellProps {
 export const navItems = [
   {
     link: '/events/manage',
-    name: 'Event Calendar',
+    name: 'Events',
     icon: IconCalendar,
     description: null,
   },
   {
-    link: '/tickets/scan',
-    name: 'Scan Tickets',
+    link: '/tickets',
+    name: 'Merch/Ticketing',
     icon: IconTicket,
     description: null,
   },
