@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (response) {
       const { account } = response;
       if (account) {
-        const [lastName, firstName] = accounts[0].name?.split(',')! || [];
+        const [lastName, firstName] = accounts[0]?.name?.split(',')! || [];
         setUserData({
           email: account.username,
           name: `${firstName} ${lastName}`,
