@@ -36,7 +36,7 @@ const LoginRedirect: React.FC = () => {
 
   // Include search params and hash in the return URL if they exist
   const returnPath = location.pathname + location.search + location.hash;
-  const loginUrl = `/login?returnTo=${encodeURIComponent(returnPath)}`;
+  const loginUrl = `/login?returnTo=${encodeURIComponent(returnPath)}&li=true`;
   return <Navigate to={loginUrl} replace />;
 };
 

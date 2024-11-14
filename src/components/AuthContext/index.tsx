@@ -83,19 +83,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [inProgress, accounts, instance]);
 
   const handleMsalResponse = useCallback((response: AuthenticationResult) => {
-    if (response) {
-      const { account } = response;
-      if (account) {
-        const [lastName, firstName] = accounts[0]?.name?.split(',')! || [];
-        setUserData({
-          email: account.username,
-          name: `${firstName} ${lastName}`,
-        });
-        setIsLoggedIn(true);
+    if (response?.account) {
+      if (!accounts.length) {
+        // If accounts array is empty, try silent authentication
+        instance.ssoSilent({
+          scopes: ['openid', 'profile', 'email'],
+          loginHint: response.account.username
+        }).then(silentResponse => {
+          if (silentResponse?.account?.name) {
+            const [lastName, firstName] = silentResponse.account.name.split(',');
+            setUserData({
+              email: silentResponse.account.username,
+              name: `${firstName} ${lastName}`,
+            });
+            setIsLoggedIn(true);
+          }
+        }).catch(console.error);
+        return;
       }
+      
+      // Use response.account instead of accounts[0]
+      const [lastName, firstName] = response.account.name?.split(',') || [];
+      setUserData({
+        email: response.account.username,
+        name: `${firstName} ${lastName}`,
+      });
+      setIsLoggedIn(true);
     }
-  }, []);
-
+   }, [accounts, instance]);
   const getApiToken = useCallback(
     async (service: ValidServices) => {
       if (!userData) {

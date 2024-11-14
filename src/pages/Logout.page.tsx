@@ -5,5 +5,5 @@ import { useAuth } from '@/components/AuthContext';
 export function LogoutPage() {
   const { logoutCallback } = useAuth();
   logoutCallback();
-  return <Navigate to="/login" />;
+  return <Navigate to={`/login?lc=true`} />;
 }
