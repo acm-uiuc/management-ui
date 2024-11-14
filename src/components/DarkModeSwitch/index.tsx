@@ -13,7 +13,7 @@ function DarkModeSwitch() {
     <IconSun
       style={{ width: rem(16), height: rem(16) }}
       stroke={2.5}
-      color={theme.colors.yellow[4]}
+      color={theme.colors.yellow[8]}
     />
   );
 
@@ -41,8 +41,8 @@ function DarkModeSwitch() {
       onChange={(event) => {
         handleToggle(event);
       }}
-      onLabel={sunIcon}
-      offLabel={moonIcon}
+      onLabel={moonIcon}
+      offLabel={sunIcon}
     />
   );
 }
