@@ -9,14 +9,14 @@ const FullScreenLoader = () => {
     defaultValue: preferredColorScheme,
   });
   return (
-    <LoadingOverlay 
-    visible 
-    loaderProps={{ 
-      color: colorScheme === 'dark' ? '#ffffff' : '#1A1B1E' 
-    }}
-    overlayProps={{
-      color: colorScheme === 'dark' ? '#1A1B1E' : '#ffffff'
-    }}
+    <LoadingOverlay
+      visible
+      loaderProps={{
+        color: colorScheme === 'dark' ? '#ffffff' : '#1A1B1E',
+      }}
+      overlayProps={{
+        color: colorScheme === 'dark' ? '#1A1B1E' : '#ffffff',
+      }}
     />
   );
 };

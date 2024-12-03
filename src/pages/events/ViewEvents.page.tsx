@@ -1,19 +1,4 @@
-import {
-  Title,
-  Box,
-  Card,
-  Text,
-  Grid,
-  SimpleGrid,
-  Button,
-  Flex,
-  Table,
-  Modal,
-  Group,
-  Transition,
-  ButtonGroup,
-  Switch,
-} from '@mantine/core';
+import { Text, Button, Table, Modal, Group, Transition, ButtonGroup } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
@@ -49,7 +34,7 @@ const requestSchema = baseSchema.extend({
 
 const getEventSchema = requestSchema.extend({
   id: z.string(),
-  upcoming: z.boolean().optional()
+  upcoming: z.boolean().optional(),
 });
 
 export type EventGetResponse = z.infer<typeof getEventSchema>;
@@ -68,12 +53,7 @@ export const ViewEventsPage: React.FC = () => {
     const shouldShow = event.upcoming || (!event.upcoming && showPrevious);
 
     return (
-      <Transition 
-        mounted={shouldShow} 
-        transition="fade" 
-        duration={400} 
-        timingFunction="ease"
-      >
+      <Transition mounted={shouldShow} transition="fade" duration={400} timingFunction="ease">
         {(styles) => (
           <tr style={{ ...styles, display: shouldShow ? 'table-row' : 'none' }}>
             <Table.Td>{event.title}</Table.Td>
@@ -110,17 +90,17 @@ export const ViewEventsPage: React.FC = () => {
     const getEvents = async () => {
       const response = await api.get('/api/v1/events');
       const upcomingEvents = await api.get('/api/v1/events?upcomingOnly=true');
-      const upcomingEventsSet = new Set(upcomingEvents.data.map((x: EventGetResponse) => x.id))
+      const upcomingEventsSet = new Set(upcomingEvents.data.map((x: EventGetResponse) => x.id));
       const events = response.data;
       events.sort((a: EventGetResponse, b: EventGetResponse) => {
         return a.start.localeCompare(b.start);
       });
       const enrichedResponse = response.data.map((item: EventGetResponse) => {
         if (upcomingEventsSet.has(item.id)) {
-          return {...item, upcoming: true}
+          return { ...item, upcoming: true };
         }
-        return {...item, upcoming: false}
-      })
+        return { ...item, upcoming: false };
+      });
       setEventList(enrichedResponse);
     };
     getEvents();
@@ -176,7 +156,7 @@ export const ViewEventsPage: React.FC = () => {
           </Group>
         </Modal>
       )}
-      <div style={{display: 'flex', columnGap: '1vw', verticalAlign: 'middle' }}>
+      <div style={{ display: 'flex', columnGap: '1vw', verticalAlign: 'middle' }}>
         <Button
           leftSection={<IconPlus size={14} />}
           onClick={() => {
@@ -203,9 +183,7 @@ export const ViewEventsPage: React.FC = () => {
             <Table.Th>Actions</Table.Th>
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody>
-          {eventList.map(renderTableRow)}
-        </Table.Tbody>
+        <Table.Tbody>{eventList.map(renderTableRow)}</Table.Tbody>
       </Table>
     </AuthGuard>
   );
