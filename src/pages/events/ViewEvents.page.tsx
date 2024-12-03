@@ -10,6 +10,9 @@ import {
   Table,
   Modal,
   Group,
+  Transition,
+  ButtonGroup,
+  Switch,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
@@ -20,7 +23,6 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { capitalizeFirstLetter } from './ManageEvent.page';
-
 import FullScreenLoader from '@/components/AuthContext/LoadingScreen';
 import { AuthGuard } from '@/components/AuthGuard';
 import { getRunEnvironmentConfig } from '@/config';
@@ -47,6 +49,7 @@ const requestSchema = baseSchema.extend({
 
 const getEventSchema = requestSchema.extend({
   id: z.string(),
+  upcoming: z.boolean().optional()
 });
 
 export type EventGetResponse = z.infer<typeof getEventSchema>;
@@ -57,28 +60,79 @@ export const ViewEventsPage: React.FC = () => {
   const [eventList, setEventList] = useState<EventsGetResponse>([]);
   const api = useApi('core');
   const [opened, { open, close }] = useDisclosure(false);
+  const [showPrevious, { toggle: togglePrevious }] = useDisclosure(false); // Changed default to false
   const [deleteCandidate, setDeleteCandidate] = useState<EventGetResponse | null>(null);
   const navigate = useNavigate();
+
+  const renderTableRow = (event: EventGetResponse) => {
+    const shouldShow = event.upcoming || (!event.upcoming && showPrevious);
+
+    return (
+      <Transition 
+        mounted={shouldShow} 
+        transition="fade" 
+        duration={400} 
+        timingFunction="ease"
+      >
+        {(styles) => (
+          <tr style={{ ...styles, display: shouldShow ? 'table-row' : 'none' }}>
+            <Table.Td>{event.title}</Table.Td>
+            <Table.Td>{dayjs(event.start).format('MMM D YYYY hh:mm')}</Table.Td>
+            <Table.Td>{event.end ? dayjs(event.end).format('MMM D YYYY hh:mm') : 'N/A'}</Table.Td>
+            <Table.Td>{event.location}</Table.Td>
+            <Table.Td>{event.description}</Table.Td>
+            <Table.Td>{event.host}</Table.Td>
+            <Table.Td>{event.featured ? 'Yes' : 'No'}</Table.Td>
+            <Table.Td>{capitalizeFirstLetter(event.repeats || 'Never')}</Table.Td>
+            <Table.Td>
+              <ButtonGroup>
+                <Button component="a" href={`/events/edit/${event.id}`}>
+                  Edit
+                </Button>
+                <Button
+                  color="red"
+                  onClick={() => {
+                    setDeleteCandidate(event);
+                    open();
+                  }}
+                >
+                  Delete
+                </Button>
+              </ButtonGroup>
+            </Table.Td>
+          </tr>
+        )}
+      </Transition>
+    );
+  };
 
   useEffect(() => {
     const getEvents = async () => {
       const response = await api.get('/api/v1/events');
+      const upcomingEvents = await api.get('/api/v1/events?upcomingOnly=true');
+      const upcomingEventsSet = new Set(upcomingEvents.data.map((x: EventGetResponse) => x.id))
       const events = response.data;
       events.sort((a: EventGetResponse, b: EventGetResponse) => {
         return a.start.localeCompare(b.start);
       });
-      setEventList(response.data);
+      const enrichedResponse = response.data.map((item: EventGetResponse) => {
+        if (upcomingEventsSet.has(item.id)) {
+          return {...item, upcoming: true}
+        }
+        return {...item, upcoming: false}
+      })
+      setEventList(enrichedResponse);
     };
     getEvents();
   }, []);
 
   const deleteEvent = async (eventId: string) => {
     try {
-      const response = await api.delete(`/api/v1/events/${eventId}`);
+      await api.delete(`/api/v1/events/${eventId}`);
       setEventList((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
       notifications.show({
         title: 'Event deleted',
-        message: `The event was successfully deleted.`,
+        message: 'The event was successfully deleted.',
       });
       close();
     } catch (error) {
@@ -122,7 +176,7 @@ export const ViewEventsPage: React.FC = () => {
           </Group>
         </Modal>
       )}
-      <div>
+      <div style={{display: 'flex', columnGap: '1vw', verticalAlign: 'middle' }}>
         <Button
           leftSection={<IconPlus size={14} />}
           onClick={() => {
@@ -131,9 +185,11 @@ export const ViewEventsPage: React.FC = () => {
         >
           New Calendar Event
         </Button>
+        <Button onClick={togglePrevious}>
+          {showPrevious ? 'Hide Previous Events' : 'Show Previous Events'}
+        </Button>
       </div>
-
-      <Table>
+      <Table style={{ tableLayout: 'fixed', width: '100%' }}>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Title</Table.Th>
@@ -144,39 +200,11 @@ export const ViewEventsPage: React.FC = () => {
             <Table.Th>Host</Table.Th>
             <Table.Th>Featured</Table.Th>
             <Table.Th>Repeats</Table.Th>
-            <Table.Th />
-            <Table.Th />
+            <Table.Th>Actions</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {eventList.map((event) => (
-            <Table.Tr key={event.id}>
-              <Table.Td>{event.title}</Table.Td>
-              <Table.Td>{dayjs(event.start).format('MMM D YYYY hh:mm')}</Table.Td>
-              <Table.Td>{event.end ? dayjs(event.end).format('MMM D YYYY hh:mm') : 'N/A'}</Table.Td>
-              <Table.Td>{event.location}</Table.Td>
-              <Table.Td>{event.description}</Table.Td>
-              <Table.Td>{event.host}</Table.Td>
-              <Table.Td>{event.featured ? 'Yes' : 'No'}</Table.Td>
-              <Table.Td>{capitalizeFirstLetter(event.repeats || 'Never') || 'Never'}</Table.Td>
-              <Table.Td>
-                <Button component="a" href={`/events/edit/${event.id}`}>
-                  Edit
-                </Button>
-              </Table.Td>
-              <Table.Td>
-                <Button
-                  color="red"
-                  onClick={() => {
-                    setDeleteCandidate(event);
-                    open();
-                  }}
-                >
-                  Delete
-                </Button>
-              </Table.Td>
-            </Table.Tr>
-          ))}
+          {eventList.map(renderTableRow)}
         </Table.Tbody>
       </Table>
     </AuthGuard>
